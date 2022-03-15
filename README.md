@@ -1,7 +1,7 @@
 # Color of Coronavirus 
 **Analyses of COVID-19 mortality by race and ethnicity in the US**
 
-This repository contains data, methods and code for APM Research Lab's Color of Coronavirus project. 
+This repository contains data, methods and code for APM Research Lab's [Color of Coronavirus project](https://www.apmresearchlab.org/covid/deaths-by-race). 
 
 See Documentation files for details on methods:
 - View quickly within GitHub using [Methods_Overview.md file](Methods_Overview.md)
