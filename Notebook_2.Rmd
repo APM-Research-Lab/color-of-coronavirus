@@ -25,7 +25,7 @@ library(readr)
 
 not_all_na <- function(x) any(!is.na(x))
 
-setwd("SET YOUR WD")
+setwd("/Users/egawthrop/Library/CloudStorage/OneDrive-APMG/coc-for-git")
 ```
 
 **Load Data**
@@ -108,7 +108,7 @@ hispanic_stat <- paste0("1 in ", round(stats_text[stats_text$Race.Ethnicity == "
 
 black_stat <- paste0("1 in ", round(stats_text[stats_text$Race.Ethnicity == "Black", "One_In"]), " Black Americans has died (or ", round(stats_text[stats_text$Race.Ethnicity == "Black", "Crude_Rate"]), " per 100,000)")
 
-aian_stat <- paste0("1 in ", round(stats_text[stats_text$Race.Ethnicity == "Indigenous", "One_In"]), " Indigenouss has died (or ", round(stats_text[stats_text$Race.Ethnicity == "Indigenous", "Crude_Rate"]), " per 100,000)")
+aian_stat <- paste0("1 in ", round(stats_text[stats_text$Race.Ethnicity == "Indigenous", "One_In"]), " Indigenous has died (or ", round(stats_text[stats_text$Race.Ethnicity == "Indigenous", "Crude_Rate"]), " per 100,000)")
 
 nhopi_stat <- paste0("1 in ", round(stats_text[stats_text$Race.Ethnicity == "Pacific Islander", "One_In"]), " Pacific Islander Americans has died (or ", round(stats_text[stats_text$Race.Ethnicity == "Pacific Islander", "Crude_Rate"]), " per 100,000)")
 
