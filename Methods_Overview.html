@@ -172,92 +172,95 @@ pre code {
 <h3>by APM Research Lab</h3>
 <p><strong>Methods are listed here in the order they are calculated in Notebook_1 and Notebook_2.</strong></p>
 </div>
+<div id="notebook-1" class="section level2">
+<h2>Notebook 1</h2>
+<p><strong>Metrics over time since the start of the COVID-19 pandemic</strong> (Charts 1, 2, 4 and 5)</p>
 <div id="chart-1" class="section level3">
 <h3>CHART 1</h3>
-<p><strong>Monthly death count time series for US combined, by race/ethnicity group</strong></p>
+<p><strong>Monthly deaths count time series for US combined, by race/ethnicity group</strong></p>
 <p>Data downloaded:</p>
 <ul>
 <li>For mortality counts over time and for crude rates over time MONTHLY/NATIONAL - <a href="https://data.cdc.gov/NCHS/Provisional-COVID-19-Deaths-Distribution-of-Deaths/pj7m-y5uh" class="uri">https://data.cdc.gov/NCHS/Provisional-COVID-19-Deaths-Distribution-of-Deaths/pj7m-y5uh</a></li>
 </ul>
 <p>Looks like this raw (preview using 10 random rows):</p>
 <pre class="r"><code>slice_sample(df, n=10)</code></pre>
-<pre><code>##    Data.as.of Start.Date   End.Date Year Month    Group          State
-## 1  03/09/2022 09/01/2021 09/30/2021 2021     9 By Month         Alaska
-## 2  03/09/2022 01/01/2021 12/31/2021 2021    NA  By Year           Ohio
-## 3  03/09/2022 02/01/2020 02/29/2020 2020     2 By Month  New York City
-## 4  03/09/2022 01/01/2020 01/31/2020 2020     1 By Month        Alabama
-## 5  03/09/2022 01/01/2021 01/31/2021 2021     1 By Month North Carolina
-## 6  03/09/2022 02/01/2020 02/29/2020 2020     2 By Month       Illinois
-## 7  03/09/2022 02/01/2021 02/28/2021 2021     2 By Month       Delaware
-## 8  03/09/2022 10/01/2021 10/31/2021 2021    10 By Month     New Jersey
-## 9  03/09/2022 02/01/2022 02/28/2022 2022     2 By Month  United States
-## 10 03/09/2022 01/01/2020 12/31/2020 2020    NA  By Year   North Dakota
+<pre><code>##    Data.as.of Start.Date   End.Date      Year Month    Group        State
+## 1  03/09/2022 01/01/2021 12/31/2021      2021    NA  By Year       Nevada
+## 2  03/09/2022 01/01/2020 03/05/2022 2020-2022    NA By Total      Georgia
+## 3  03/09/2022 07/01/2021 07/31/2021      2021     7 By Month      Georgia
+## 4  03/09/2022 04/01/2021 04/30/2021      2021     4 By Month      Arizona
+## 5  03/09/2022 09/01/2020 09/30/2020      2020     9 By Month      Alabama
+## 6  03/09/2022 02/01/2020 02/29/2020      2020     2 By Month South Dakota
+## 7  03/09/2022 09/01/2021 09/30/2021      2021     9 By Month     Delaware
+## 8  03/09/2022 04/01/2021 04/30/2021      2021     4 By Month   New Jersey
+## 9  03/09/2022 01/01/2021 12/31/2021      2021    NA  By Year   New Mexico
+## 10 03/09/2022 08/01/2020 08/31/2020      2020     8 By Month South Dakota
 ##                                    Indicator Non.Hispanic.White
-## 1        Distribution of COVID-19 deaths (%)               61.5
-## 2                   Count of COVID-19 deaths            17424.0
-## 3  Unweighted distribution of population (%)               32.1
-## 4                   Count of COVID-19 deaths                0.0
-## 5    Weighted distribution of population (%)               55.8
-## 6                   Count of COVID-19 deaths                0.0
-## 7        Distribution of COVID-19 deaths (%)               72.1
-## 8  Unweighted distribution of population (%)               54.1
-## 9    Weighted distribution of population (%)               43.3
-## 10       Distribution of COVID-19 deaths (%)               88.2
+## 1                   Count of COVID-19 deaths             3233.0
+## 2                   Count of COVID-19 deaths            18834.0
+## 3    Weighted distribution of population (%)               44.2
+## 4  Unweighted distribution of population (%)               53.8
+## 5  Unweighted distribution of population (%)               65.1
+## 6        Distribution of COVID-19 deaths (%)                0.0
+## 7                   Count of COVID-19 deaths               94.0
+## 8    Weighted distribution of population (%)               49.8
+## 9        Distribution of COVID-19 deaths (%)               33.5
+## 10 Unweighted distribution of population (%)               82.3
 ##    Non.Hispanic.Black.or.African.American
-## 1                                      NA
-## 2                                  2410.0
-## 3                                    21.8
-## 4                                      NA
-## 5                                    25.0
+## 1                                   577.0
+## 2                                 10044.0
+## 3                                    37.3
+## 4                                     4.6
+## 5                                    26.5
 ## 6                                     0.0
-## 7                                    20.4
-## 8                                    13.0
-## 9                                    12.7
-## 10                                    0.7
+## 7                                    33.0
+## 8                                    15.2
+## 9                                     1.4
+## 10                                    2.3
 ##    Non.Hispanic.American.Indian.or.Alaska.Native Non.Hispanic.Asian
-## 1                                           20.3                8.0
-## 2                                           17.0              146.0
-## 3                                            0.2               15.0
-## 4                                            0.0                0.0
-## 5                                            0.5                5.2
+## 1                                           61.0              488.0
+## 2                                           27.0              504.0
+## 3                                            0.2                5.9
+## 4                                            3.9                3.5
+## 5                                            0.6                1.5
 ## 6                                            0.0                0.0
 ## 7                                            0.0                 NA
-## 8                                            0.2               10.0
-## 9                                            0.5                9.2
-## 10                                           8.3                 NA
+## 8                                            0.1               10.7
+## 9                                           18.3                0.6
+## 10                                           6.9                1.7
 ##    Non.Hispanic.Native.Hawaiian.or.Other.Pacific.Islander
-## 1                                                      NA
-## 2                                                      NA
+## 1                                                   105.0
+## 2                                                    18.0
 ## 3                                                     0.1
-## 4                                                     0.0
+## 4                                                     0.2
 ## 5                                                     0.1
 ## 6                                                     0.0
 ## 7                                                     0.0
 ## 8                                                     0.0
-## 9                                                     0.2
-## 10                                                    0.0
+## 9                                                      NA
+## 10                                                    0.1
 ##    Non.Hispanic.more.than.one.race Hispanic.or.Latino
-## 1                               NA                 NA
-## 2                             25.0              391.0
-## 3                              1.9               29.0
-## 4                              0.0                0.0
-## 5                              2.2               11.2
+## 1                             68.0             1098.0
+## 2                             42.0             1546.0
+## 3                              2.1               10.3
+## 4                              2.2               31.9
+## 5                              1.7                4.6
 ## 6                              0.0                0.0
-## 7                              0.0                 NA
-## 8                              1.6               21.1
-## 9                              2.3               31.8
-## 10                              NA                1.9
+## 7                               NA                 NA
+## 8                              1.5               22.6
+## 9                              0.4               45.5
+## 10                             2.3                4.4
 ##                                                                                                                      Footnote
-## 1  One or more data cells have counts between 1-9 and have been suppressed in accordance with NCHS confidentiality standards.
-## 2  One or more data cells have counts between 1-9 and have been suppressed in accordance with NCHS confidentiality standards.
+## 1                                                                                                                            
+## 2                                                                                                                            
 ## 3                                                                                                                            
-## 4  One or more data cells have counts between 1-9 and have been suppressed in accordance with NCHS confidentiality standards.
+## 4                                                                                                                            
 ## 5                                                                                                                            
 ## 6                                                                                                                            
 ## 7  One or more data cells have counts between 1-9 and have been suppressed in accordance with NCHS confidentiality standards.
 ## 8                                                                                                                            
-## 9                                                                                                                            
-## 10 One or more data cells have counts between 1-9 and have been suppressed in accordance with NCHS confidentiality standards.</code></pre>
+## 9  One or more data cells have counts between 1-9 and have been suppressed in accordance with NCHS confidentiality standards.
+## 10</code></pre>
 <p>Processed in Notebook 1:</p>
 <ul>
 <li><p>Filtered such that “Group = By Month”, “State = United States”, and “Indicator = Count of COVID-19 deaths”</p></li>
@@ -371,136 +374,136 @@ pre code {
 <p>Mortality data looks like this:</p>
 <pre class="r"><code>slice_sample(df5, n=10)</code></pre>
 <pre><code>##    State     StateName                                          RaceEthnicity
-## 1     MN     Minnesota                                     Non-Hispanic Black
-## 2     AL       Alabama Non-Hispanic Native Hawaiian or Other Pacific Islander
-## 3     WV West Virginia                                     Non-Hispanic White
-## 4     NV        Nevada                                     Non-Hispanic Black
-## 5     CA    California Non-Hispanic Native Hawaiian or Other Pacific Islander
-## 6     MA Massachusetts                                     Non-Hispanic Asian
-## 7     KY      Kentucky                                     Non-Hispanic Asian
-## 8     CA    California                                     Non-Hispanic White
-## 9     NV        Nevada                                     Non-Hispanic Asian
-## 10    NJ    New Jersey                                     Non-Hispanic Black
+## 1     OR        Oregon                              All Race/Ethnicity Groups
+## 2     NE      Nebraska                                     Non-Hispanic Black
+## 3     TN     Tennessee                              All Race/Ethnicity Groups
+## 4     MA Massachusetts          Non-Hispanic American Indian or Alaska Native
+## 5     CA    California                                     Non-Hispanic Asian
+## 6     AZ       Arizona                                     Non-Hispanic Asian
+## 7     KS        Kansas          Non-Hispanic American Indian or Alaska Native
+## 8     RI  Rhode Island                                     Non-Hispanic White
+## 9     DE      Delaware Non-Hispanic Native Hawaiian or Other Pacific Islander
+## 10    AR      Arkansas Non-Hispanic Native Hawaiian or Other Pacific Islander
 ##           Sex    AgeGroup Year
-## 1  Female (F)    All Ages 2016
-## 2  Female (F) 30-49 Years 2020
-## 3   All Sexes         85+ 2019
-## 4   All Sexes 65-74 Years 2021
-## 5    Male (M)    All Ages 2016
-## 6  Female (F)  0-14 Years 2019
-## 7    Male (M) 75-84 Years 2019
-## 8    Male (M) 65-74 Years 2020
-## 9   All Sexes 15-29 Years 2017
-## 10 Female (F) 65-74 Years 2020
+## 1    Male (M) 65-74 Years 2016
+## 2  Female (F) 50-64 Years 2017
+## 3  Female (F) 75-84 Years 2020
+## 4   All Sexes 75-84 Years 2015
+## 5  Female (F)    All Ages 2021
+## 6    Male (M) 65-74 Years 2016
+## 7  Female (F)         85+ 2021
+## 8    Male (M) 65-74 Years 2017
+## 9   All Sexes  0-14 Years 2020
+## 10   Male (M) 50-64 Years 2019
 ##                                                    Quarter
-## 1                                                Quarter 4
-## 2  Cumulative from 2020, Quarter 2 through 2021, Quarter 3
-## 3                                                Quarter 4
-## 4                                                Quarter 4
-## 5                                                Quarter 2
-## 6                                             All Quarters
-## 7                                                Quarter 4
-## 8  Cumulative from 2020, Quarter 2 through 2020, Quarter 4
-## 9                                             All Quarters
-## 10                                               Quarter 3
+## 1                                                Quarter 1
+## 2                                             All Quarters
+## 3                                                Quarter 2
+## 4                                                Quarter 1
+## 5                                                Quarter 1
+## 6                                                Quarter 3
+## 7                                             All Quarters
+## 8                                                Quarter 3
+## 9  Cumulative from 2020, Quarter 2 through 2021, Quarter 1
+## 10                                               Quarter 4
 ##                                                YearQuarter Start.Date
-## 1                                          2016, Quarter 4 10/01/2016
-## 2  Cumulative from 2020, Quarter 2 through 2021, Quarter 3 04/01/2020
-## 3                                          2019, Quarter 4 10/01/2019
-## 4                                          2021, Quarter 4 10/01/2021
-## 5                                          2016, Quarter 2 04/01/2016
-## 6                                       2019, All Quarters 01/01/2019
-## 7                                          2019, Quarter 4 10/01/2019
-## 8  Cumulative from 2020, Quarter 2 through 2020, Quarter 4 04/01/2020
-## 9                                       2017, All Quarters 01/01/2017
-## 10                                         2020, Quarter 3 07/01/2020
+## 1                                          2016, Quarter 1 01/01/2016
+## 2                                       2017, All Quarters 01/01/2017
+## 3                                          2020, Quarter 2 04/01/2020
+## 4                                          2015, Quarter 1 01/01/2015
+## 5                                          2021, Quarter 1 01/01/2021
+## 6                                          2016, Quarter 3 07/01/2016
+## 7                                       2021, All Quarters 01/01/2021
+## 8                                          2017, Quarter 3 07/01/2017
+## 9  Cumulative from 2020, Quarter 2 through 2021, Quarter 1 04/01/2020
+## 10                                         2019, Quarter 4 10/01/2019
 ##      End.Date Deaths..weighted. COVID19..weighted. Deaths..unweighted.
-## 1  12/31/2016               145                  0                 145
-## 2  09/30/2021                NA                  0                  NA
-## 3  12/31/2019              1422                  0                1422
-## 4  12/31/2021               209                 33                 205
-## 5  06/30/2016               127                  0                 127
-## 6  12/31/2019                10                  0                  10
-## 7  12/31/2019                NA                  0                  NA
-## 8  12/31/2020             14724               1202               14724
-## 9  12/31/2017                28                  0                  28
-## 10 09/30/2020               269                 11                 269
+## 1  03/31/2016              1027                  0                1027
+## 2  12/31/2017                49                  0                  49
+## 3  06/30/2020              2300                 79                2300
+## 4  03/31/2015                NA                  0                  NA
+## 5  03/31/2021              5710               1695                5710
+## 6  09/30/2016                NA                  0                  NA
+## 7  12/31/2021                18                 NA                  18
+## 8  09/30/2017               220                  0                 220
+## 9  03/31/2021                NA                  0                  NA
+## 10 12/31/2019                NA                  0                  NA
 ##    COVID19..unweighted. Time.Period Average.number.of.deaths..weighted.
-## 1                     0   2015-2019                                 162
-## 2                     0        2021                                  NA
-## 3                     0   2015-2019                                1443
-## 4                    33        2021                                 209
-## 5                     0   2015-2019                                 134
-## 6                     0        2021                                  11
-## 7                     0   2015-2019                                  NA
-## 8                  1202        2021                               14724
-## 9                     0        2021                                  23
-## 10                   11        2020                                 269
+## 1                     0   2015-2019                                1064
+## 2                     0        2021                                  58
+## 3                    79        2020                                2300
+## 4                     0   2015-2019                                  NA
+## 5                  1695        2021                                5710
+## 6                     0   2015-2019                                  14
+## 7                    NA        2021                                  18
+## 8                     0   2015-2019                                 213
+## 9                     0        2021                                  NA
+## 10                    0   2015-2019                                  NA
 ##    Average.number.of.deaths..unweighted. Number.above.average..weighted.
-## 1                                    162                              NA
-## 2                                     NA                              NA
-## 3                                   1443                              NA
-## 4                                    205                              93
-## 5                                    134                              NA
-## 6                                     11                              NA
-## 7                                     NA                              NA
-## 8                                  14724                            2241
-## 9                                     23                              NA
-## 10                                   269                              56
+## 1                                   1064                              NA
+## 2                                     58                              NA
+## 3                                   2300                             205
+## 4                                     NA                              NA
+## 5                                   5710                            2134
+## 6                                     14                              NA
+## 7                                     18                               0
+## 8                                    213                              NA
+## 9                                     NA                              NA
+## 10                                    NA                              NA
 ##    Percent.above.average..weighted. Number.above.average..unweighted.
 ## 1                                NA                                NA
 ## 2                                NA                                NA
-## 3                                NA                                NA
-## 4                              80.2                                89
-## 5                                NA                                NA
+## 3                               9.8                               205
+## 4                                NA                                NA
+## 5                              59.7                              2134
 ## 6                                NA                                NA
-## 7                                NA                                NA
-## 8                              18.0                              2241
+## 7                               0.0                                 0
+## 8                                NA                                NA
 ## 9                                NA                                NA
-## 10                             26.3                                56
+## 10                               NA                                NA
 ##    Percent.above.average..unweighted. AnalysisDate
 ## 1                                  NA   02/20/2022
 ## 2                                  NA   02/20/2022
-## 3                                  NA   02/20/2022
-## 4                                76.7   02/20/2022
-## 5                                  NA   02/20/2022
+## 3                                 9.8   02/20/2022
+## 4                                  NA   02/20/2022
+## 5                                59.7   02/20/2022
 ## 6                                  NA   02/20/2022
-## 7                                  NA   02/20/2022
-## 8                                18.0   02/20/2022
+## 7                                 0.0   02/20/2022
+## 8                                  NA   02/20/2022
 ## 9                                  NA   02/20/2022
-## 10                               26.3   02/20/2022
+## 10                                 NA   02/20/2022
 ##                                                                                                                   Suppression
 ## 1                                                                                                                            
-## 2  One or more data cells have counts between 1-9 and have been suppressed in accordance with NCHS confidentiality standards.
+## 2                                                                                                                            
 ## 3                                                                                                                            
-## 4                                                                                                                            
+## 4  One or more data cells have counts between 1-9 and have been suppressed in accordance with NCHS confidentiality standards.
 ## 5                                                                                                                            
-## 6                                                                                                                            
+## 6  One or more data cells have counts between 1-9 and have been suppressed in accordance with NCHS confidentiality standards.
 ## 7  One or more data cells have counts between 1-9 and have been suppressed in accordance with NCHS confidentiality standards.
 ## 8                                                                                                                            
-## 9                                                                                                                            
-## 10                                                                                                                           
+## 9  One or more data cells have counts between 1-9 and have been suppressed in accordance with NCHS confidentiality standards.
+## 10 One or more data cells have counts between 1-9 and have been suppressed in accordance with NCHS confidentiality standards.
 ##                                          Footnote
 ## 1                                                
 ## 2                                                
 ## 3                                                
-## 4  Data may be incomplete in recent time periods.
-## 5                                                
+## 4                                                
+## 5  Data may be incomplete in recent time periods.
 ## 6                                                
-## 7                                                
+## 7  Data may be incomplete in recent time periods.
 ## 8                                                
 ## 9                                                
 ## 10                                               
 ##                                                                 Type
 ## 1                                                Quarterly Estimates
-## 2  Cumulative Estimates From 2020, Quarter 2 Through 2021, Quarter 3
+## 2                                                   Annual Estimates
 ## 3                                                Quarterly Estimates
 ## 4                                                Quarterly Estimates
 ## 5                                                Quarterly Estimates
-## 6                                                   Annual Estimates
-## 7                                                Quarterly Estimates
-## 8  Cumulative Estimates From 2020, Quarter 2 Through 2020, Quarter 4
-## 9                                                   Annual Estimates
+## 6                                                Quarterly Estimates
+## 7                                                   Annual Estimates
+## 8                                                Quarterly Estimates
+## 9  Cumulative Estimates From 2020, Quarter 2 Through 2021, Quarter 1
 ## 10                                               Quarterly Estimates</code></pre>
 <p>Processed in Notebook 1</p>
 <ul>
@@ -515,18 +518,18 @@ pre code {
 </ul>
 <pre class="r"><code>slice_sample(chart_4_Q_export, n=10)</code></pre>
 <pre><code>## # A tibble: 10 × 11
-##    End.Date   State         YearQuarter  YearMonth Latino Indigenous Asian Black
-##    &lt;date&gt;     &lt;chr&gt;         &lt;chr&gt;        &lt;chr&gt;      &lt;dbl&gt;      &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-##  1 2020-06-30 Idaho         2020, Quart… 6/2020      NA         NA     0    NA  
-##  2 2021-03-31 Florida       Cumulative … 3/2021     140.        84.4  73.3 161. 
-##  3 2020-09-30 Colorado      Cumulative … 9/2020      40.8       59.4  37.8  61.9
-##  4 2021-12-31 North Dakota  Cumulative … 12/2021    150.       533.   NA    59.2
-##  5 2021-09-30 California    Cumulative … 9/2021     221.       248.  147.  226. 
-##  6 2021-03-31 Massachusetts Cumulative … 3/2021     120.        96.1  85.8 196. 
-##  7 2021-12-31 Illinois      Cumulative … 12/2021    190.       108.  124.  279. 
-##  8 2021-06-30 Louisiana     Cumulative … 6/2021     105.       110.   86.8 255. 
-##  9 2020-06-30 Alabama       2020, Quart… 6/2020      17.7       NA    NA    44.6
-## 10 2020-09-30 Illinois      Cumulative … 9/2020      76.9       51.2  49.6 115. 
+##    End.Date   State          YearQuarter YearMonth Latino Indigenous Asian Black
+##    &lt;date&gt;     &lt;chr&gt;          &lt;chr&gt;       &lt;chr&gt;      &lt;dbl&gt;      &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+##  1 2021-03-31 Kentucky       Cumulative… 3/2021      64.1       NA    46.5 169. 
+##  2 2020-12-31 North Dakota   Cumulative… 12/2020     84.2      317.   NA    39.4
+##  3 2021-06-30 Nevada         Cumulative… 6/2021     158.       255.  240.  195. 
+##  4 2021-06-30 Pennsylvania   Cumulative… 6/2021     116.        58.7 115.  263. 
+##  5 2021-06-30 Iowa           Cumulative… 6/2021      89.3      483.   85.2 136. 
+##  6 2021-09-30 Michigan       Cumulative… 9/2021     137.       155.   72.2 326. 
+##  7 2020-09-30 North Carolina Cumulative… 9/2020      31.2       43.7  18.8  54.9
+##  8 2020-09-30 Ohio           Cumulative… 9/2020      21.1       NA    19.3  62.9
+##  9 2021-03-31 Texas          Cumulative… 3/2021     205.        97.3  72.6 152. 
+## 10 2021-03-31 South Carolina Cumulative… 3/2021      67.8      126.   75.1 223. 
 ## # … with 3 more variables: Pacific Islander &lt;dbl&gt;, White &lt;dbl&gt;,
 ## #   More than one race &lt;dbl&gt;</code></pre>
 </div>
@@ -540,21 +543,26 @@ pre code {
 <p>Processed in Notebook 1</p>
 <pre class="r"><code>slice_sample(chart_5_export, n=10)</code></pre>
 <pre><code>## # A tibble: 10 × 11
-##    End.Date   State         YearQuarter      White Latino Black Asian Indigenous
-##    &lt;date&gt;     &lt;chr&gt;         &lt;chr&gt;            &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;      &lt;dbl&gt;
-##  1 2020-09-30 Ohio          Cumulative fro…   3871    103   936    58         NA
-##  2 2020-06-30 United States &lt;NA&gt;             67277  22734 29894  6278       1153
-##  3 2021-06-30 Nebraska      Cumulative fro…   2552    223   114    25         21
-##  4 2020-03-31 Missouri      2020, Quarter 1     13     NA    17     0          0
-##  5 2020-06-30 Virginia      2020, Quarter 2   1172    245   508   122         NA
-##  6 2021-09-30 Wisconsin     Cumulative fro…   7977    457   643   167        114
-##  7 2020-12-31 United States &lt;NA&gt;            232830  69472 61537 13591       4615
-##  8 2020-03-31 South Dakota  2020, Quarter 1     NA      0     0     0          0
-##  9 2020-09-30 Utah          Cumulative fro…    289    112    NA    22         37
-## 10 2021-12-31 Louisiana     Cumulative fro…   8306    390  4950   101         74
+##    End.Date   State        YearQuarter       White Latino Black Asian Indigenous
+##    &lt;date&gt;     &lt;chr&gt;        &lt;chr&gt;             &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;      &lt;dbl&gt;
+##  1 2020-09-30 Pennsylvania Cumulative from …  6089    495  1759   188         NA
+##  2 2021-03-31 Ohio         Cumulative from … 18374    377  2713   193         13
+##  3 2021-09-30 Nebraska     Cumulative from …  2875    244   133    27         26
+##  4 2020-03-31 North Dakota 2020, Quarter 1      NA      0     0     0          0
+##  5 2021-06-30 Georgia      Cumulative from … 10432    982  6341   368         14
+##  6 2020-12-31 Illinois     Cumulative from … 10187   2794  3005   609         15
+##  7 2020-09-30 New York     Cumulative from … 13014   8281  7904  2502         21
+##  8 2021-03-31 Minnesota    Cumulative from …  6165    210   354   285         97
+##  9 2020-09-30 Montana      Cumulative from …   125     NA    NA    NA         65
+## 10 2021-06-30 Arkansas     Cumulative from …  4836    243   943    48         39
 ## # … with 3 more variables: More than one race &lt;dbl&gt;, Pacific Islander &lt;dbl&gt;,
 ## #   End.Date2 &lt;chr&gt;</code></pre>
+<hr />
 </div>
+</div>
+<div id="notebook-2" class="section level2">
+<h2>Notebook 2</h2>
+<p><strong>Cumulative numbers over the course of the COVID-19 pandemic</strong> (Chart 7, Key Findings, Chart 6, Chart 3 and Maps)</p>
 <div id="chart-7" class="section level3">
 <h3>CHART 7</h3>
 <p><strong>Cumulative death counts for entire pandemic</strong></p>
@@ -563,92 +571,92 @@ pre code {
 <li>For total counts and cumulative crude rates and age adjusted rates — <a href="https://data.cdc.gov/NCHS/Distribution-of-COVID-19-Deaths-and-Populations-by/jwta-jxbg" class="uri">https://data.cdc.gov/NCHS/Distribution-of-COVID-19-Deaths-and-Populations-by/jwta-jxbg</a></li>
 </ul>
 <pre class="r"><code>slice_sample(df4, n=10)</code></pre>
-<pre><code>##    Data.as.of Start.Date   End.Date         State
-## 1  03/09/2022 01/01/2020 03/05/2022    New Jersey
-## 2  03/09/2022 01/01/2020 03/05/2022       Wyoming
-## 3  03/09/2022 01/01/2020 03/05/2022       Florida
-## 4  03/09/2022 01/01/2020 03/05/2022        Oregon
-## 5  03/09/2022 01/01/2020 03/05/2022    California
-## 6  03/09/2022 01/01/2020 03/05/2022      Oklahoma
-## 7  03/09/2022 01/01/2020 03/05/2022 Massachusetts
-## 8  03/09/2022 01/01/2020 03/05/2022  Pennsylvania
-## 9  03/09/2022 01/01/2020 03/05/2022      Virginia
-## 10 03/09/2022 01/01/2020 03/05/2022        Alaska
+<pre><code>##    Data.as.of Start.Date   End.Date          State
+## 1  03/09/2022 01/01/2020 03/05/2022       Nebraska
+## 2  03/09/2022 01/01/2020 03/05/2022       Nebraska
+## 3  03/09/2022 01/01/2020 03/05/2022       Maryland
+## 4  03/09/2022 01/01/2020 03/05/2022      Tennessee
+## 5  03/09/2022 01/01/2020 03/05/2022        Alabama
+## 6  03/09/2022 01/01/2020 03/05/2022       Delaware
+## 7  03/09/2022 01/01/2020 03/05/2022        Arizona
+## 8  03/09/2022 01/01/2020 03/05/2022 South Carolina
+## 9  03/09/2022 01/01/2020 03/05/2022     New Mexico
+## 10 03/09/2022 01/01/2020 03/05/2022    Connecticut
 ##                                      Race.Hispanic.origin
-## 1           Non-Hispanic American Indian or Alaska Native
+## 1                                                Hispanic
 ## 2                                                   Other
-## 3                                      Non-Hispanic Black
-## 4                                                Hispanic
+## 3                                      Non-Hispanic Asian
+## 4                                      Non-Hispanic Asian
 ## 5                                                Hispanic
-## 6                                      Non-Hispanic White
-## 7                                      Non-Hispanic White
+## 6                                      Non-Hispanic Black
+## 7  Non-Hispanic Native Hawaiian or Other Pacific Islander
 ## 8                                                   Other
-## 9                                      Non-Hispanic Asian
-## 10 Non-Hispanic Native Hawaiian or Other Pacific Islander
+## 9                                                Hispanic
+## 10                                               Hispanic
 ##    Count.of.COVID.19.deaths Distribution.of.COVID.19.deaths....
-## 1                       1.8                                 0.1
-## 2                       0.0                                 0.0
-## 3                    2400.0                                13.4
-## 4                     569.0                                 8.5
-## 5                   10001.0                                48.8
-## 6                      64.0                                38.8
-## 7                    3848.0                                80.6
-## 8                        NA                                  NA
-## 9                     152.0                                 3.0
+## 1                      50.0                                19.6
+## 2                        NA                                  NA
+## 3                     163.0                                 3.8
+## 4                      11.8                                 0.5
+## 5                      56.0                                 1.2
+## 6                     143.0                                22.8
+## 7                        NA                                  NA
+## 8                      24.0                                 0.1
+## 9                     720.0                                42.2
 ## 10                       NA                                  NA
 ##    Unweighted.distribution.of.population....
-## 1                                        0.2
-## 2                                        1.0
-## 3                                        7.7
-## 4                                       13.7
-## 5                                       22.3
-## 6                                       60.1
-## 7                                       86.1
-## 8                                        3.8
-## 9                                        4.2
-## 10                                       0.5
+## 1                                       10.5
+## 2                                        0.4
+## 3                                        5.0
+## 4                                        2.0
+## 5                                        1.3
+## 6                                       15.6
+## 7                                        0.1
+## 8                                        1.8
+## 9                                       33.4
+## 10                                      24.3
 ##    Weighted.distribution.of.population....
-## 1                                      0.2
-## 2                                      0.9
-## 3                                     10.0
-## 4                                     13.7
-## 5                                     29.8
-## 6                                     55.2
-## 7                                     84.1
-## 8                                      4.1
-## 9                                      8.3
-## 10                                     0.7
+## 1                                     10.9
+## 2                                      0.3
+## 3                                      6.3
+## 4                                      2.9
+## 5                                      1.2
+## 6                                     16.6
+## 7                                      0.0
+## 8                                      1.8
+## 9                                     33.8
+## 10                                    26.9
 ##    Difference.between.COVID.19.and.unweighted.population..
-## 1                                                     -0.1
-## 2                                                     -1.0
-## 3                                                      5.7
-## 4                                                     -5.2
-## 5                                                     26.5
-## 6                                                    -21.3
-## 7                                                     -5.5
-## 8                                                       NA
-## 9                                                     -1.2
+## 1                                                      9.1
+## 2                                                       NA
+## 3                                                     -1.2
+## 4                                                     -1.5
+## 5                                                     -0.1
+## 6                                                      7.2
+## 7                                                       NA
+## 8                                                     -1.7
+## 9                                                      8.8
 ## 10                                                      NA
 ##    Difference.between.COVID.19.and.weighted.population..               AgeGroup
-## 1                                                   -0.1 All ages, standardized
-## 2                                                   -0.9      85 years and over
-## 3                                                    3.4            75-84 years
-## 4                                                   -5.2   All ages, unadjusted
-## 5                                                   19.0            65-74 years
-## 6                                                  -16.4            25-34 years
-## 7                                                   -3.5            75-84 years
-## 8                                                     NA             0-24 years
-## 9                                                   -5.3      85 years and over
-## 10                                                    NA      85 years and over
+## 1                                                    8.7            45-54 years
+## 2                                                     NA            75-84 years
+## 3                                                   -2.5      85 years and over
+## 4                                                   -2.4 All ages, standardized
+## 5                                                    0.0            65-74 years
+## 6                                                    6.2            65-74 years
+## 7                                                     NA      85 years and over
+## 8                                                   -1.7   All ages, unadjusted
+## 9                                                    8.4            65-74 years
+## 10                                                    NA             0-24 years
 ##                Suppression
 ## 1                         
-## 2                         
+## 2  Suppressed (counts &lt;10)
 ## 3                         
 ## 4                         
 ## 5                         
 ## 6                         
-## 7                         
-## 8  Suppressed (counts &lt;10)
+## 7  Suppressed (counts &lt;10)
+## 8                         
 ## 9                         
 ## 10 Suppressed (counts &lt;10)</code></pre>
 <p>Processed in Notebook 2</p>
@@ -658,17 +666,17 @@ pre code {
 <li><p>Selected variables needed (End Date, State, Race/Ethnicity and Total Deaths) and exported</p></li>
 </ul>
 <pre class="r"><code>slice_sample(chart_7_export, n=10)</code></pre>
-<pre><code>##      End.Date                State   Race.Ethnicity Count.of.COVID.19.deaths
-## 1  03/05/2022             Missouri       Indigenous                       92
-## 2  03/05/2022             Virginia            Black                    4,342
-## 3  03/05/2022             New York            Other                    1,316
-## 4  03/05/2022            Minnesota            Black                      619
-## 5  03/05/2022                 Ohio            Black                    5,016
-## 6  03/05/2022           New Jersey            Black                    5,244
-## 7  03/05/2022            Tennessee       Indigenous                       34
-## 8  03/05/2022            Minnesota            White                   10,602
-## 9  03/05/2022              Florida       Indigenous                      118
-## 10 03/05/2022 District of Columbia Pacific Islander                        0</code></pre>
+<pre><code>##      End.Date       State Race.Ethnicity Count.of.COVID.19.deaths
+## 1  03/05/2022    Michigan          Asian                      297
+## 2  03/05/2022    Oklahoma          White                   11,033
+## 3  03/05/2022    Oklahoma          Other                      382
+## 4  03/05/2022        Ohio         Latino                      739
+## 5  03/05/2022     Wyoming         Latino                      137
+## 6  03/05/2022     Georgia          White                   18,834
+## 7  03/05/2022  California          Black                    6,162
+## 8  03/05/2022    Michigan     Indigenous                      158
+## 9  03/05/2022      Oregon          Asian                      163
+## 10 03/05/2022 Mississippi     Indigenous                      140</code></pre>
 </div>
 <div id="key-findings" class="section level3">
 <h3>KEY FINDINGS</h3>
@@ -707,18 +715,18 @@ pre code {
 <p>Non Hispanic as example:</p>
 <pre class="r"><code>slice_sample(df6, n=10)</code></pre>
 <pre><code>## # A tibble: 10 × 8
-##    Notes       Ethnicity   `Ethnicity Code` Race    `Race Code` `Ten-Year Age G…
-##    &lt;chr&gt;       &lt;chr&gt;       &lt;chr&gt;            &lt;chr&gt;   &lt;chr&gt;       &lt;chr&gt;           
-##  1 &lt;NA&gt;        Not Hispan… 2186-5           White   2106-3      65-74 years     
-##  2 Total       Not Hispan… 2186-5           &lt;NA&gt;    &lt;NA&gt;        &lt;NA&gt;            
-##  3 Dataset: S… &lt;NA&gt;        &lt;NA&gt;             &lt;NA&gt;    &lt;NA&gt;        &lt;NA&gt;            
-##  4 &lt;NA&gt;        Not Hispan… 2186-5           Black … 2054-5      5-14 years      
-##  5 &lt;NA&gt;        Not Hispan… 2186-5           Native… NHOPI       75-84 years     
-##  6 ---         &lt;NA&gt;        &lt;NA&gt;             &lt;NA&gt;    &lt;NA&gt;        &lt;NA&gt;            
-##  7 &lt;NA&gt;        Not Hispan… 2186-5           White   2106-3      &lt; 1 year        
-##  8 &lt;NA&gt;        Not Hispan… 2186-5           Native… NHOPI       15-24 years     
-##  9 &lt;NA&gt;        Not Hispan… 2186-5           White   2106-3      15-24 years     
-## 10 &lt;NA&gt;        Not Hispan… 2186-5           Asian   A           55-64 years     
+##    Notes Ethnicity    `Ethnicity Code` Race         `Race Code` `Ten-Year Age G…
+##    &lt;chr&gt; &lt;chr&gt;        &lt;chr&gt;            &lt;chr&gt;        &lt;chr&gt;       &lt;chr&gt;           
+##  1 &lt;NA&gt;  Not Hispani… 2186-5           White        2106-3      1-4 years       
+##  2 Total &lt;NA&gt;         &lt;NA&gt;             &lt;NA&gt;         &lt;NA&gt;        &lt;NA&gt;            
+##  3 &lt;NA&gt;  Not Hispani… 2186-5           American In… 1002-5      75-84 years     
+##  4 &lt;NA&gt;  Not Hispani… 2186-5           Asian        A           65-74 years     
+##  5 &lt;NA&gt;  Not Hispani… 2186-5           American In… 1002-5      85+ years       
+##  6 &lt;NA&gt;  Not Hispani… 2186-5           Black or Af… 2054-5      65-74 years     
+##  7 &lt;NA&gt;  Not Hispani… 2186-5           American In… 1002-5      15-24 years     
+##  8 &lt;NA&gt;  Not Hispani… 2186-5           Asian        A           55-64 years     
+##  9 &lt;NA&gt;  Not Hispani… 2186-5           Native Hawa… NHOPI       25-34 years     
+## 10 &lt;NA&gt;  Not Hispani… 2186-5           Native Hawa… NHOPI       15-24 years     
 ## # … with 2 more variables: Ten-Year Age Groups Code &lt;chr&gt;, Population &lt;dbl&gt;</code></pre>
 <ul>
 <li><p>For age adjustment, state populations by age groups, 2020 Census via CDC WONDER -</p>
@@ -732,16 +740,16 @@ pre code {
 <pre><code>## # A tibble: 10 × 6
 ##    Notes States   `States Code` `Ten-Year Age Gro… `Ten-Year Age Gro… Population
 ##    &lt;chr&gt; &lt;chr&gt;    &lt;chr&gt;         &lt;chr&gt;              &lt;chr&gt;                   &lt;dbl&gt;
-##  1 &lt;NA&gt;  Delaware 10            75-84 years        75-84                    1392
-##  2 &lt;NA&gt;  Texas    48            5-14 years         5-14                  2069289
-##  3 &lt;NA&gt;  Hawaii   15            &lt; 1 year           1                        2865
-##  4 Total Colorado 08            &lt;NA&gt;               &lt;NA&gt;                  1274247
-##  5 &lt;NA&gt;  Oregon   41            25-34 years        25-34                   99187
-##  6 Total &lt;NA&gt;     &lt;NA&gt;          &lt;NA&gt;               &lt;NA&gt;                 61312879
-##  7 &lt;NA&gt;  West Vi… 54            75-84 years        75-84                     712
-##  8 &lt;NA&gt;  Nebraska 31            65-74 years        65-74                    6535
-##  9 &lt;NA&gt;  Louisia… 22            85+ years          85+                      2796
-## 10 &lt;NA&gt;  Wiscons… 55            55-64 years        55-64                   27061</code></pre>
+##  1 &lt;NA&gt;  Iowa     19            &lt; 1 year           1                        4325
+##  2 &lt;NA&gt;  New Ham… 33            85+ years          85+                       412
+##  3 Total Connect… 09            &lt;NA&gt;               &lt;NA&gt;                   612929
+##  4 &lt;NA&gt;  Califor… 06            85+ years          85+                    139944
+##  5 &lt;NA&gt;  New Mex… 35            45-54 years        45-54                  114613
+##  6 &lt;NA&gt;  Idaho    16            1-4 years          1-4                     18157
+##  7 &lt;NA&gt;  Rhode I… 44            85+ years          85+                      1226
+##  8 &lt;NA&gt;  Indiana  18            1-4 years          1-4                     38910
+##  9 &lt;NA&gt;  Texas    48            5-14 years         5-14                  2069289
+## 10 &lt;NA&gt;  Missouri 29            25-34 years        25-34                   42953</code></pre>
 <ul>
 <li><p>Imported mortality data from Chart 7</p></li>
 <li><p>Same state population data as Chart 4</p></li>
@@ -822,38 +830,38 @@ pre code {
 </ul>
 <pre class="r"><code>slice_sample(chart_6_export, n=10)</code></pre>
 <pre><code>##      End.Date                State   Race.Ethnicity Number of COVID-19 Deaths
-## 1  03/05/2022                 Ohio Pacific Islander                        NA
-## 2  03/05/2022              Alabama            Black                     5,038
-## 3  03/05/2022             Michigan       Indigenous                       158
-## 4  03/05/2022             Nebraska       Indigenous                        45
-## 5  03/05/2022               Oregon            White                     5,547
-## 6  03/05/2022                 Ohio            Asian                       318
-## 7  03/05/2022              Wyoming            White                     1,319
-## 8  03/05/2022             Delaware       Indigenous                        NA
-## 9  03/05/2022         Rhode Island       Indigenous                        15
-## 10 03/05/2022 District of Columbia            Black                     1,221
+## 1  03/05/2022             Illinois            Black                     5,916
+## 2  03/05/2022               Alaska Pacific Islander                        57
+## 3  03/05/2022              Indiana       Indigenous                        26
+## 4  03/05/2022        Massachusetts           Latino                     1,437
+## 5  03/05/2022              Wyoming            Asian                        NA
+## 6  03/05/2022            Minnesota            Asian                       483
+## 7  03/05/2022             Kentucky            Black                     1,121
+## 8  03/05/2022               Nevada           Latino                     2,285
+## 9  03/05/2022             Illinois           Latino                     4,694
+## 10 03/05/2022 District of Columbia            White                       226
 ##    Population Crude Rate age_adjusted_rate_direct age_adjusted_rate_indirect
-## 1        5235         NA                       NA                         NA
-## 2     1303754        386                 473.9975                   497.8490
-## 3       56766        278                       NA                         NA
-## 4       16176        278                       NA                         NA
-## 5     3166992        175                       NA                   145.4321
-## 6      300068        106                       NA                   177.5033
-## 7      486788        271                 251.4996                   252.7554
-## 8        2974         NA                       NA                         NA
-## 9        4459        336                       NA                         NA
-## 10     312456        391                       NA                   405.0040
+## 1     1778786        333                 398.2312                   405.1483
+## 2       11132        512                       NA                         NA
+## 3       15602        167                       NA                         NA
+## 4      867425        166                 371.2328                   350.7747
+## 5        5869         NA                       NA                         NA
+## 6      296865        163                       NA                   348.6060
+## 7      370691        302                 418.5786                   429.0570
+## 8      924674        247                 503.7154                   531.3707
+## 9     2219748        211                 423.5441                   433.9760
+## 10     269011         84                       NA                   115.8294
 ##    Direct_Available Age-Adjusted Rate
-## 1             FALSE                NA
-## 2              TRUE               474
+## 1              TRUE               398
+## 2             FALSE                NA
 ## 3             FALSE                NA
-## 4             FALSE                NA
-## 5             FALSE               145
-## 6             FALSE               178
-## 7              TRUE               251
-## 8             FALSE                NA
-## 9             FALSE                NA
-## 10            FALSE               405</code></pre>
+## 4              TRUE               371
+## 5             FALSE                NA
+## 6             FALSE               349
+## 7              TRUE               419
+## 8              TRUE               504
+## 9              TRUE               424
+## 10            FALSE               116</code></pre>
 </div>
 <div id="chart-3" class="section level3">
 <h3>CHART 3</h3>
@@ -889,30 +897,31 @@ pre code {
 </ul>
 <p>Example from Hispanic dataset</p>
 <pre class="r"><code>slice_sample(hispanic, n=10)</code></pre>
-<pre><code>##            State Race.Ethnicity Crude Rate Age-Adjusted Rate
-## 1         Hawaii         Latino         66                NA
-## 2  Massachusetts         Latino        166               371
-## 3     California         Latino        261               467
-## 4       Oklahoma         Latino        201               551
-## 5        Vermont         Latino         NA                NA
-## 6   Rhode Island         Latino        125               271
-## 7        Indiana         Latino        176               451
-## 8           Iowa         Latino        135               395
-## 9    Connecticut         Latino        189               383
-## 10      Nebraska         Latino        133               389
+<pre><code>##             State Race.Ethnicity Crude Rate Age-Adjusted Rate
+## 1   Massachusetts         Latino        166               371
+## 2       Wisconsin         Latino        153               419
+## 3     Connecticut         Latino        189               383
+## 4           Idaho         Latino        172               450
+## 5      New Mexico         Latino        295               386
+## 6            Iowa         Latino        135               395
+## 7          Oregon         Latino         98               262
+## 8          Kansas         Latino        191               495
+## 9      New Jersey         Latino        316               527
+## 10 North Carolina         Latino        112               296
 ##    Number of COVID-19 Deaths
-## 1                        101
-## 2                      1,437
-## 3                     40,703
-## 4                        910
-## 5                         NA
-## 6                        220
-## 7                        886
-## 8                        278
-## 9                      1,161
-## 10                       301</code></pre>
+## 1                      1,437
+## 2                        653
+## 3                      1,161
+## 4                        407
+## 5                      3,085
+## 6                        278
+## 7                        569
+## 8                        693
+## 9                      5,929
+## 10                     1,177</code></pre>
 <p><br />
 </p>
+</div>
 </div>
 
 
