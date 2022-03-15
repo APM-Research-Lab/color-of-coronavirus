@@ -1,0 +1,266 @@
+---
+title: "R Notebook"
+output:
+  html_document:
+    df_print: paged
+---
+
+**Set WD, Load libraries, define "not in" function, any NA function**
+
+```{r}
+## CLEAN THIS SECTION UP 
+library(tidyr)
+library(dplyr)
+library(ggplot2)
+library(reshape2)
+library(lubridate)
+library(stringr)
+library(plyr)
+library(readxl)
+library(plotly)
+library(mapproj)
+library(fiftystater)
+library(readr)
+
+`%!in%` <- Negate(`%in%`)
+
+not_all_na <- function(x) any(!is.na(x))
+
+setwd("SET YOUR WD")
+```
+
+**Load Data**
+
+```{r}
+
+### first for counts - downloaded here: https://data.cdc.gov/NCHS/Provisional-COVID-19-Deaths-Distribution-of-Deaths/pj7m-y5uh
+df <- read.csv("raw_data/Provisional_COVID-19_Deaths__Distribution_of_Deaths_by_Race_and_Hispanic_Origin_4RAWCRUDE.csv")
+```
+
+**CHART 1 - Monthly Counts over Time - National**
+
+```{r}
+# filter for just death counts by month
+chart_1 <- df %>% filter(Group == "By Month" & State == "United States" & Indicator == "Count of COVID-19 deaths") 
+# rename columns  
+chart_1 <- chart_1 %>% plyr::rename(c("Non.Hispanic.White" = "White", "Non.Hispanic.Black.or.African.American" = "Black", "Non.Hispanic.Asian" = "Asian", "Non.Hispanic.American.Indian.or.Alaska.Native" = "Indigenous", "Non.Hispanic.Native.Hawaiian.or.Other.Pacific.Islander" = "Pacific Islander", "Non.Hispanic.more.than.one.race" = "More than one race", "Hispanic.or.Latino" = "Latino"))
+
+# make variable for year month combined 
+chart_1 <- chart_1 %>% mutate(Year_Month = make_date(Year, Month)) %>% mutate(Year_Month = format(Year_Month, "%Y-%m"))
+
+# add variable that sums all deaths of known race
+chart_1 <- chart_1 %>% mutate(`All Americans` = White+Black+`Indigenous`+Asian+`Pacific Islander`+`More than one race`+Latino)
+
+# select just variables needed for chart 1
+chart_1_export <- chart_1 %>% select(c("Year_Month", "White", "Black", "Indigenous", "Asian", 
+"Pacific Islander", "More than one race", "Latino", "All Americans"))
+
+write.csv(chart_1_export, "chart_1.csv")
+```
+
+
+**CHART 2 - Crude Rates over Time - National**
+
+This is also what will go into chart 4 as the national level data. Same underlying data as Chart 1. 
+
+```{r}
+
+## first load population data - from: https://wonder.cdc.gov/controller/saved/D170/D278F683
+df2 <- read_delim("raw_data/total_us_pop_by_race.txt", 
+    delim = "\t", escape_double = FALSE, 
+    trim_ws = TRUE)
+
+## filter for just population data that is needed: total hispanic/latino (all races) and non-hispanic separated by race
+pop_US <- df2 %>% filter((Notes == "Total" & Ethnicity == "Hispanic or Latino") | ((is.na(Notes) | Notes!="Total") & Ethnicity != "Hispanic or Latino"))
+
+pop_US <- pop_US %>% mutate(Race.Ethnicity = coalesce(Race, Ethnicity)) %>% select(Race.Ethnicity, Population) %>% mutate(State = c("United States"))
+
+## rename race/ethnicity 
+pop_US$Race.Ethnicity <- str_replace_all(pop_US$Race.Ethnicity, c("Black or African American" = "Black", "American Indian or Alaska Native" = "Indigenous", "Native Hawaiian or Other Pacific Islander" = "Pacific Islander", "Hispanic or Latino" = "Latino"))
+
+## health data - same as used for chart 1 
+# filter deaths over time to include just national data - same data as chart 1 
+chart_4 <- df %>% filter(Group == "By Month" & Indicator == "Count of COVID-19 deaths" & State == "United States")
+
+# rename race/ethnicity variables 
+chart_4 <- chart_4 %>% plyr::rename(c("Non.Hispanic.White" = "White", "Non.Hispanic.Black.or.African.American" = "Black", "Non.Hispanic.Asian" = "Asian", "Non.Hispanic.American.Indian.or.Alaska.Native" = "Indigenous", "Non.Hispanic.Native.Hawaiian.or.Other.Pacific.Islander" = "Pacific Islander", "Non.Hispanic.more.than.one.race" = "More than one race", "Hispanic.or.Latino" = "Latino")) 
+
+# make data long instead of wide and get rid of unneeded columns 
+chart_4 <- chart_4 %>% pivot_longer(cols = c("White", "Black", "Indigenous", "Asian", 
+"Pacific Islander", "Latino", "More than one race"), names_to = "Race.Ethnicity", values_to = "COVID.19.Deaths") %>% 
+  select(End.Date, Year, Month, State, Race.Ethnicity, COVID.19.Deaths)
+
+chart_4 <- chart_4 %>% left_join(pop_US)
+
+## calculate cumulative deaths by month 
+chart_4 <- chart_4 %>% group_by(Race.Ethnicity) %>% mutate(Cumulative_Total = cumsum(COVID.19.Deaths)) 
+
+## calculate cumulative crude rates by month 
+chart_4 <- chart_4 %>% mutate(Cumulative_Crude = Cumulative_Total/Population*100000) 
+
+## combine year and month into one column 
+chart_4 <- chart_4 %>% mutate(YearMonth = paste(Month,Year, sep = "/")) 
+
+# format End.Date as a date
+chart_4$End.Date <- mdy(chart_4$End.Date)
+
+## select/rearrange data 
+chart_4 <- chart_4 %>%  select(c("End.Date", "State", "Race.Ethnicity", "COVID.19.Deaths", "Cumulative_Total", "Cumulative_Crude", "YearMonth"))
+
+# select just cumulative crude numbers for chart 2 
+chart_2_export <- chart_4 %>% select(c("YearMonth", "State", "Race.Ethnicity", "Cumulative_Crude")) %>% pivot_wider(names_from = "Race.Ethnicity", values_from = "Cumulative_Crude") 
+
+write.csv(chart_2_export, "chart_2.csv")
+
+## add empty year quarter variable for later rbind for rest of chart 4
+chart_4 <- chart_4 %>% mutate(YearQuarter = NA)
+
+```
+
+**CHART 4 - Crude Rates over Time - Adding in State Quarterly Portion**
+
+```{r}
+
+#import quarterly data 
+### downloaded here: https://data.cdc.gov/NCHS/AH-Quarterly-Excess-Deaths-by-State-Sex-Age-and-Ra/jqg8-ycmh
+df5 <- read.csv("raw_data/AH_Quarterly_Excess_Deaths_by_State__Sex__Age__and_Race_4QUARTERLY.csv")
+## get column names 
+#dput(names(chart_4_Q))
+
+# filter for variables of interest
+chart_4_Q <- df5 %>% filter(Sex == "All Sexes" & Year %in% c(2020:2022) & AgeGroup == "All Ages" & (Quarter %in% c("Cumulative from 2020, Quarter 2 through 2020, Quarter 4", "Cumulative from 2020, Quarter 2 through 2021, Quarter 4", "Cumulative from 2020, Quarter 2 through 2021, Quarter 1", "Cumulative from 2020, Quarter 2 through 2021, Quarter 3", "Cumulative from 2020, Quarter 2 through 2021, Quarter 2", "Cumulative from 2020, Quarter 2 through 2020, Quarter 3") | (Year == 2020 & Quarter %in% c("Quarter 1", "Quarter 2")))) %>% select(c("StateName", "RaceEthnicity", "Year", "Quarter", "YearQuarter", "Start.Date", "End.Date", "COVID19..weighted.", "COVID19..unweighted.")) 
+
+# rename variables 
+chart_4_Q <- chart_4_Q  %>% plyr::rename(c('RaceEthnicity' = 'Race.Ethnicity', 'StateName' = 'State'))
+
+chart_4_Q$Race.Ethnicity <- str_replace_all(chart_4_Q$Race.Ethnicity, c("Non-Hispanic White" = "White", "Non-Hispanic Black" = "Black", "Non-Hispanic American Indian or Alaska Native" = "Indigenous", "Non-Hispanic Native Hawaiian or Other Pacific Islander" = "Pacific Islander", "Non-Hispanic Asian" = "Asian", "Hispanic" = "Latino"))
+
+## load population data - from: https://wonder.cdc.gov/controller/saved/D170/D279F330
+df3 <- read_delim("raw_data/states_pop_by_race.txt", 
+    delim = "\t", escape_double = FALSE, 
+    trim_ws = TRUE)
+
+## filter for just population data that is needed, rename state variable 
+
+pop_STATES <- df3 %>% filter((Notes == "Total" & Ethnicity == "Hispanic or Latino") | ((is.na(Notes) | Notes!="Total") & Ethnicity != "Hispanic or Latino")) %>% plyr::rename(c("States" = "State"))
+
+pop_STATES <- pop_STATES %>% mutate(Race.Ethnicity = coalesce(Race, Ethnicity)) %>% select(State, Race.Ethnicity, Population)
+
+#add us total populations 
+pop_STATES <- rbind(pop_STATES, pop_US)
+
+pop_STATES$Race.Ethnicity <- str_replace_all(pop_STATES$Race.Ethnicity, c("Black or African American" = "Black", "American Indian or Alaska Native" = "Indigenous", "Native Hawaiian or Other Pacific Islander" = "Pacific Islander", "Hispanic or Latino" = "Latino"))
+
+chart_4_Q <- chart_4_Q %>% left_join(pop_STATES)
+
+## omit all races data and 'other' race data for now
+chart_4_Q <- chart_4_Q %>% filter(Race.Ethnicity %!in% c("All Race/Ethnicity Groups", "Other"))
+
+# retain Quarter/End Date columns for later 
+quarters_end_dates <- chart_4_Q %>% select(c("YearQuarter", "End.Date"))
+qed <- unique(quarters_end_dates)
+
+## make data wide to pull out Q1 
+chart_4_Q_wide <- chart_4_Q %>% select(c("State", "Race.Ethnicity", "YearQuarter", "COVID19..unweighted.", "Population"))
+
+chart_4_Q_wide <- chart_4_Q_wide %>% pivot_wider(names_from = YearQuarter, values_from = COVID19..unweighted.)
+
+# duplicate Q1 column 
+chart_4_Q_wide <- chart_4_Q_wide %>% mutate(Q1_for_adding = `2020, Quarter 1`)
+
+# make data long again, leaving duplicate Q1 
+chart_4_Q <- chart_4_Q_wide %>% pivot_longer(cols = c(
+                                            "2020, Quarter 1", 
+                                           "2020, Quarter 2", 
+                                           "Cumulative from 2020, Quarter 2 through 2020, Quarter 3",
+                                           "Cumulative from 2020, Quarter 2 through 2020, Quarter 4",
+                                           "Cumulative from 2020, Quarter 2 through 2021, Quarter 1",
+                                           "Cumulative from 2020, Quarter 2 through 2021, Quarter 2",
+                                           "Cumulative from 2020, Quarter 2 through 2021, Quarter 3",
+                                           "Cumulative from 2020, Quarter 2 through 2021, Quarter 4"), 
+                                           names_to = "YearQuarter", 
+                                           values_to = "COVID19..unweighted.")
+
+## use Zeros instead of NA for duplicate Q1 (still have NAs in "2020, Quarter 1" column)
+chart_4_Q <- chart_4_Q %>% mutate(Q1_for_adding = replace_na(Q1_for_adding, 0))
+
+# calculate totals including Q1
+chart_4_Q <- chart_4_Q %>% mutate(COVID.19.cumulative.deaths = if_else(YearQuarter != "2020, Quarter 1", COVID19..unweighted. + Q1_for_adding, COVID19..unweighted. + 0))
+
+
+# combine the nyc and nys values 
+chart_4_Q_NY <- chart_4_Q %>% filter(State %in% c("New York","New York City"))
+chart_4_Q_NY_new <- chart_4_Q_NY %>% group_by(Race.Ethnicity, YearQuarter) %>% mutate(COVID19..unweighted._COMBO = sum(COVID19..unweighted., na.rm = TRUE)) %>% mutate(COVID.19.cumulative.deaths_COMBO = sum(COVID.19.cumulative.deaths, na.rm = TRUE))
+chart_4_Q_NY_new_renamed <- chart_4_Q_NY_new %>% select(!c("COVID.19.cumulative.deaths", "COVID19..unweighted.")) %>% filter(State == "New York") %>% plyr::rename(c("COVID.19.cumulative.deaths_COMBO" = "COVID.19.cumulative.deaths", "COVID19..unweighted._COMBO" = "COVID19..unweighted."))
+
+# remove NY data from original dataset 
+chart_4_Q_NOT_NY <- chart_4_Q %>% filter(State %!in% c("New York","New York City"))
+
+# merge together  non-NY dataset with new NY data
+chart_4_Q <- rbind(chart_4_Q_NOT_NY, chart_4_Q_NY_new_renamed)
+
+## calculate crude rates
+chart_4_Q <- chart_4_Q %>% mutate(Crude = COVID.19.cumulative.deaths/Population*100000)
+
+## add back in and format End.Date as date
+chart_4_Q <- chart_4_Q %>% left_join(qed)
+chart_4_Q$End.Date <- mdy(chart_4_Q$End.Date)
+
+
+## rename and select/rearrange data 
+chart_4_Q <- chart_4_Q  %>% plyr::rename(c("COVID19..unweighted." = "COVID.19.Deaths", "COVID.19.cumulative.deaths" = "Cumulative_Total", "Crude" = "Cumulative_Crude")) %>%
+  select(c("End.Date", "State", "Race.Ethnicity", "COVID.19.Deaths", "Cumulative_Total", "Cumulative_Crude", "YearQuarter"))
+
+## add YearMonth column to match with national data 
+chart_4_Q <- chart_4_Q %>% mutate(YearMonth = paste(month(chart_4_Q$End.Date),year(chart_4_Q$End.Date), sep = "/"))
+
+  
+## combine with national data 
+
+chart_4_final <- chart_4_Q %>% rbind(chart_4)
+
+
+# select variables for chart 4, make wide
+chart_4_Q_export <- chart_4_final %>% select(c("End.Date", "State", "Race.Ethnicity", "Cumulative_Crude", "YearQuarter", "YearMonth"))
+chart_4_Q_export <- chart_4_Q_export %>% pivot_wider(names_from = "Race.Ethnicity", values_from = "Cumulative_Crude")
+
+# reorder states - alphabetical with US first 
+chart_4_Q_export <- chart_4_Q_export[order(chart_4_Q_export$State),]
+match_list = c("United States")
+chart_4_Q_export <- chart_4_Q_export %>% arrange(desc(State %in% match_list))
+
+# make readable date column 
+#chart_4_Q_export <- chart_4_Q_export %>% mutate(End.Date2 = ifelse(State == "United States", format(End.Date, "%b %Y"), format(End.Date, "%b %d, %Y")))
+
+# remove rows from before April 2020 (these deaths are still counted but excluded for visual clarity)
+chart_4_Q_export <- chart_4_Q_export %>% filter(End.Date >= "2020-04-01")
+
+
+write.csv(chart_4_Q_export, "chart_4.csv")
+
+```
+
+**CHART 5 - Cumulative Totals over Time, by State**
+
+```{r}
+## use same data as chart 4 but export cumulative totals instead of rates 
+chart_5_export <- chart_4_final %>% select(c("End.Date", "State", "Race.Ethnicity", "Cumulative_Total", "YearQuarter"))
+chart_5_export <- chart_5_export %>% pivot_wider(names_from = "Race.Ethnicity", values_from = "Cumulative_Total")
+
+# reorder states - alphabetical with US first 
+chart_5_export <- chart_5_export[order(chart_5_export$State),]
+match_list = c("United States")
+chart_5_export <- chart_5_export %>% arrange(desc(State %in% match_list))
+
+# reorder columns so that stacked area chart goes from biggest to smallest top to bottom 
+chart_5_export <- chart_5_export %>% select(c("End.Date", "State", "YearQuarter", "White", "Latino", "Black", "Asian", "Indigenous", "More than one race", "Pacific Islander"))
+
+# make readable date column 
+chart_5_export <- chart_5_export %>% mutate(End.Date2 = ifelse(State == "United States", format(End.Date, "%b %Y"), format(End.Date, "%b %d, %Y")))
+
+write.csv(chart_5_export, "chart_5.csv")
+```
+
+```{r}
+save.image(file='NB1.RData')
+```

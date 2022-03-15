@@ -1,0 +1,37 @@
+"Notes"	"Ethnicity"	"Ethnicity Code"	"Race"	"Race Code"	Population
+	"Hispanic or Latino"	"2135-2"	"American Indian or Alaska Native"	"1002-5"	1860652
+	"Hispanic or Latino"	"2135-2"	"Asian"	"A"	645081
+	"Hispanic or Latino"	"2135-2"	"Black or African American"	"2054-5"	3103771
+	"Hispanic or Latino"	"2135-2"	"Native Hawaiian or Other Pacific Islander"	"NHOPI"	230186
+	"Hispanic or Latino"	"2135-2"	"White"	"2106-3"	53536334
+	"Hispanic or Latino"	"2135-2"	"More than one race"	"M"	1936855
+"Total"	"Hispanic or Latino"	"2135-2"			61312879
+	"Not Hispanic or Latino"	"2186-5"	"American Indian or Alaska Native"	"1002-5"	2432338
+	"Not Hispanic or Latino"	"2186-5"	"Asian"	"A"	19367197
+	"Not Hispanic or Latino"	"2186-5"	"Black or African American"	"2054-5"	41427341
+	"Not Hispanic or Latino"	"2186-5"	"Native Hawaiian or Other Pacific Islander"	"NHOPI"	613507
+	"Not Hispanic or Latino"	"2186-5"	"White"	"2106-3"	196773390
+	"Not Hispanic or Latino"	"2186-5"	"More than one race"	"M"	7557471
+"Total"	"Not Hispanic or Latino"	"2186-5"			268171244
+"Total"					329484123
+"---"
+"Dataset: Single-Race Population Estimates 2010-2020 by State and Single-Year Age"
+"Query Parameters:"
+"Yearly July 1st Estimates: 2020"
+"Group By: Ethnicity; Race"
+"Show Totals: True"
+"Show Zero Values: True"
+"---"
+"Help: See http://wonder.cdc.gov/wonder/help/single-race.html for more information."
+"---"
+"Query Date: Feb 18, 2022 12:08:09 PM"
+"---"
+"Suggested Citation: Single-race Population Estimates, United States, 2010-2020. July 1st resident population by state, age, sex,"
+"single-race, and Hispanic origin, on CDC WONDER Online Database. Vintage 2020 estimates released by U.S. Census Bureau on July"
+"27, 2021. Accessed at http://wonder.cdc.gov/single-race-single-year-v2020.html on Feb 18, 2022 12:08:09 PM"
+"---"
+Footnotes:
+"1. Estimates for 2010-2020 are single-race Vintage 2020 postcensal estimates of the July 1 resident population. These estimates"
+"were prepared and released by the U.S. Census Bureau on July 27, 2021."
+"---"
+Caveats:

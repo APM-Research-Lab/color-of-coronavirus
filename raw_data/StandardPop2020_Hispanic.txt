@@ -1,0 +1,35 @@
+"Notes"	"Ten-Year Age Groups"	"Ten-Year Age Groups Code"	Population
+	"< 1 year"	"1"	970381
+	"1-4 years"	"1-4"	4029420
+	"5-14 years"	"5-14"	10541172
+	"15-24 years"	"15-24"	10013713
+	"25-34 years"	"25-34"	9627323
+	"35-44 years"	"35-44"	8742890
+	"45-54 years"	"45-54"	7250232
+	"55-64 years"	"55-64"	5255928
+	"65-74 years"	"65-74"	2978586
+	"75-84 years"	"75-84"	1368466
+	"85+ years"	"85+"	534768
+"Total"			61312879
+"---"
+"Dataset: Single-Race Population Estimates 2010-2020 by State and Single-Year Age"
+"Query Parameters:"
+"Ethnicity: Hispanic or Latino"
+"Yearly July 1st Estimates: 2020"
+"Group By: Ten-Year Age Groups"
+"Show Totals: True"
+"Show Zero Values: True"
+"---"
+"Help: See http://wonder.cdc.gov/wonder/help/single-race.html for more information."
+"---"
+"Query Date: Feb 24, 2022 6:57:40 PM"
+"---"
+"Suggested Citation: Single-race Population Estimates, United States, 2010-2020. July 1st resident population by state, age, sex,"
+"single-race, and Hispanic origin, on CDC WONDER Online Database. Vintage 2020 estimates released by U.S. Census Bureau on July"
+"27, 2021. Accessed at http://wonder.cdc.gov/single-race-single-year-v2020.html on Feb 24, 2022 6:57:40 PM"
+"---"
+Footnotes:
+"1. Estimates for 2010-2020 are single-race Vintage 2020 postcensal estimates of the July 1 resident population. These estimates"
+"were prepared and released by the U.S. Census Bureau on July 27, 2021."
+"---"
+Caveats:

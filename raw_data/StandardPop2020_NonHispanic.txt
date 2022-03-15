@@ -1,0 +1,86 @@
+"Notes"	"Ethnicity"	"Ethnicity Code"	"Race"	"Race Code"	"Ten-Year Age Groups"	"Ten-Year Age Groups Code"	Population
+	"Not Hispanic or Latino"	"2186-5"	"American Indian or Alaska Native"	"1002-5"	"< 1 year"	"1"	28154
+	"Not Hispanic or Latino"	"2186-5"	"American Indian or Alaska Native"	"1002-5"	"1-4 years"	"1-4"	119843
+	"Not Hispanic or Latino"	"2186-5"	"American Indian or Alaska Native"	"1002-5"	"5-14 years"	"5-14"	341411
+	"Not Hispanic or Latino"	"2186-5"	"American Indian or Alaska Native"	"1002-5"	"15-24 years"	"15-24"	357305
+	"Not Hispanic or Latino"	"2186-5"	"American Indian or Alaska Native"	"1002-5"	"25-34 years"	"25-34"	379426
+	"Not Hispanic or Latino"	"2186-5"	"American Indian or Alaska Native"	"1002-5"	"35-44 years"	"35-44"	306092
+	"Not Hispanic or Latino"	"2186-5"	"American Indian or Alaska Native"	"1002-5"	"45-54 years"	"45-54"	282848
+	"Not Hispanic or Latino"	"2186-5"	"American Indian or Alaska Native"	"1002-5"	"55-64 years"	"55-64"	299713
+	"Not Hispanic or Latino"	"2186-5"	"American Indian or Alaska Native"	"1002-5"	"65-74 years"	"65-74"	201422
+	"Not Hispanic or Latino"	"2186-5"	"American Indian or Alaska Native"	"1002-5"	"75-84 years"	"75-84"	87254
+	"Not Hispanic or Latino"	"2186-5"	"American Indian or Alaska Native"	"1002-5"	"85+ years"	"85+"	28870
+"Total"	"Not Hispanic or Latino"	"2186-5"	"American Indian or Alaska Native"	"1002-5"			2432338
+	"Not Hispanic or Latino"	"2186-5"	"Asian"	"A"	"< 1 year"	"1"	201653
+	"Not Hispanic or Latino"	"2186-5"	"Asian"	"A"	"1-4 years"	"1-4"	886849
+	"Not Hispanic or Latino"	"2186-5"	"Asian"	"A"	"5-14 years"	"5-14"	2192457
+	"Not Hispanic or Latino"	"2186-5"	"Asian"	"A"	"15-24 years"	"15-24"	2346517
+	"Not Hispanic or Latino"	"2186-5"	"Asian"	"A"	"25-34 years"	"25-34"	3215568
+	"Not Hispanic or Latino"	"2186-5"	"Asian"	"A"	"35-44 years"	"35-44"	3094108
+	"Not Hispanic or Latino"	"2186-5"	"Asian"	"A"	"45-54 years"	"45-54"	2663370
+	"Not Hispanic or Latino"	"2186-5"	"Asian"	"A"	"55-64 years"	"55-64"	2147171
+	"Not Hispanic or Latino"	"2186-5"	"Asian"	"A"	"65-74 years"	"65-74"	1561105
+	"Not Hispanic or Latino"	"2186-5"	"Asian"	"A"	"75-84 years"	"75-84"	749059
+	"Not Hispanic or Latino"	"2186-5"	"Asian"	"A"	"85+ years"	"85+"	309340
+"Total"	"Not Hispanic or Latino"	"2186-5"	"Asian"	"A"			19367197
+	"Not Hispanic or Latino"	"2186-5"	"Black or African American"	"2054-5"	"< 1 year"	"1"	522731
+	"Not Hispanic or Latino"	"2186-5"	"Black or African American"	"2054-5"	"1-4 years"	"1-4"	2158900
+	"Not Hispanic or Latino"	"2186-5"	"Black or African American"	"2054-5"	"5-14 years"	"5-14"	5638333
+	"Not Hispanic or Latino"	"2186-5"	"Black or African American"	"2054-5"	"15-24 years"	"15-24"	5893959
+	"Not Hispanic or Latino"	"2186-5"	"Black or African American"	"2054-5"	"25-34 years"	"25-34"	6600459
+	"Not Hispanic or Latino"	"2186-5"	"Black or African American"	"2054-5"	"35-44 years"	"35-44"	5395849
+	"Not Hispanic or Latino"	"2186-5"	"Black or African American"	"2054-5"	"45-54 years"	"45-54"	5042472
+	"Not Hispanic or Latino"	"2186-5"	"Black or African American"	"2054-5"	"55-64 years"	"55-64"	4990093
+	"Not Hispanic or Latino"	"2186-5"	"Black or African American"	"2054-5"	"65-74 years"	"65-74"	3246374
+	"Not Hispanic or Latino"	"2186-5"	"Black or African American"	"2054-5"	"75-84 years"	"75-84"	1413506
+	"Not Hispanic or Latino"	"2186-5"	"Black or African American"	"2054-5"	"85+ years"	"85+"	524665
+"Total"	"Not Hispanic or Latino"	"2186-5"	"Black or African American"	"2054-5"			41427341
+	"Not Hispanic or Latino"	"2186-5"	"Native Hawaiian or Other Pacific Islander"	"NHOPI"	"< 1 year"	"1"	8467
+	"Not Hispanic or Latino"	"2186-5"	"Native Hawaiian or Other Pacific Islander"	"NHOPI"	"1-4 years"	"1-4"	35791
+	"Not Hispanic or Latino"	"2186-5"	"Native Hawaiian or Other Pacific Islander"	"NHOPI"	"5-14 years"	"5-14"	86019
+	"Not Hispanic or Latino"	"2186-5"	"Native Hawaiian or Other Pacific Islander"	"NHOPI"	"15-24 years"	"15-24"	84723
+	"Not Hispanic or Latino"	"2186-5"	"Native Hawaiian or Other Pacific Islander"	"NHOPI"	"25-34 years"	"25-34"	103065
+	"Not Hispanic or Latino"	"2186-5"	"Native Hawaiian or Other Pacific Islander"	"NHOPI"	"35-44 years"	"35-44"	92827
+	"Not Hispanic or Latino"	"2186-5"	"Native Hawaiian or Other Pacific Islander"	"NHOPI"	"45-54 years"	"45-54"	73322
+	"Not Hispanic or Latino"	"2186-5"	"Native Hawaiian or Other Pacific Islander"	"NHOPI"	"55-64 years"	"55-64"	64957
+	"Not Hispanic or Latino"	"2186-5"	"Native Hawaiian or Other Pacific Islander"	"NHOPI"	"65-74 years"	"65-74"	41017
+	"Not Hispanic or Latino"	"2186-5"	"Native Hawaiian or Other Pacific Islander"	"NHOPI"	"75-84 years"	"75-84"	17209
+	"Not Hispanic or Latino"	"2186-5"	"Native Hawaiian or Other Pacific Islander"	"NHOPI"	"85+ years"	"85+"	6110
+"Total"	"Not Hispanic or Latino"	"2186-5"	"Native Hawaiian or Other Pacific Islander"	"NHOPI"			613507
+	"Not Hispanic or Latino"	"2186-5"	"White"	"2106-3"	"< 1 year"	"1"	1806934
+	"Not Hispanic or Latino"	"2186-5"	"White"	"2106-3"	"1-4 years"	"1-4"	7540986
+	"Not Hispanic or Latino"	"2186-5"	"White"	"2106-3"	"5-14 years"	"5-14"	20301571
+	"Not Hispanic or Latino"	"2186-5"	"White"	"2106-3"	"15-24 years"	"15-24"	22391838
+	"Not Hispanic or Latino"	"2186-5"	"White"	"2106-3"	"25-34 years"	"25-34"	25067058
+	"Not Hispanic or Latino"	"2186-5"	"White"	"2106-3"	"35-44 years"	"35-44"	23794741
+	"Not Hispanic or Latino"	"2186-5"	"White"	"2106-3"	"45-54 years"	"45-54"	24532589
+	"Not Hispanic or Latino"	"2186-5"	"White"	"2106-3"	"55-64 years"	"55-64"	29200078
+	"Not Hispanic or Latino"	"2186-5"	"White"	"2106-3"	"65-74 years"	"65-74"	24236857
+	"Not Hispanic or Latino"	"2186-5"	"White"	"2106-3"	"75-84 years"	"75-84"	12691925
+	"Not Hispanic or Latino"	"2186-5"	"White"	"2106-3"	"85+ years"	"85+"	5208813
+"Total"	"Not Hispanic or Latino"	"2186-5"	"White"	"2106-3"			196773390
+"Total"	"Not Hispanic or Latino"	"2186-5"					260613773
+"Total"							260613773
+"---"
+"Dataset: Single-Race Population Estimates 2010-2020 by State and Single-Year Age"
+"Query Parameters:"
+"Ethnicity: Not Hispanic or Latino"
+"Race: American Indian or Alaska Native; Asian; Black or African American; Native Hawaiian or Other Pacific Islander; White"
+"Yearly July 1st Estimates: 2020"
+"Group By: Ethnicity; Race; Ten-Year Age Groups"
+"Show Totals: True"
+"Show Zero Values: True"
+"---"
+"Help: See http://wonder.cdc.gov/wonder/help/single-race.html for more information."
+"---"
+"Query Date: Feb 24, 2022 6:50:07 PM"
+"---"
+"Suggested Citation: Single-race Population Estimates, United States, 2010-2020. July 1st resident population by state, age, sex,"
+"single-race, and Hispanic origin, on CDC WONDER Online Database. Vintage 2020 estimates released by U.S. Census Bureau on July"
+"27, 2021. Accessed at http://wonder.cdc.gov/single-race-single-year-v2020.html on Feb 24, 2022 6:50:07 PM"
+"---"
+Footnotes:
+"1. Estimates for 2010-2020 are single-race Vintage 2020 postcensal estimates of the July 1 resident population. These estimates"
+"were prepared and released by the U.S. Census Bureau on July 27, 2021."
+"---"
+Caveats:

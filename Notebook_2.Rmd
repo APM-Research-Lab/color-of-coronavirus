@@ -1,0 +1,461 @@
+---
+title: "R Notebook"
+output:
+  html_document:
+    df_print: paged
+---
+**Set WD, Load libraries, define "not in" function, any NA function**
+
+```{r}
+
+library(tidyr)
+library(dplyr)
+library(ggplot2)
+library(reshape2)
+library(lubridate)
+library(stringr)
+library(plyr)
+library(readxl)
+library(plotly)
+library(mapproj)
+library(fiftystater)
+library(readr)
+
+`%!in%` <- Negate(`%in%`)
+
+not_all_na <- function(x) any(!is.na(x))
+
+setwd("SET YOUR WD")
+```
+
+**Load Data**
+```{r}
+
+### first for counts - downloaded here: https://data.cdc.gov/NCHS/Distribution-of-COVID-19-Deaths-and-Populations-by/jwta-jxbg
+df4 <- read.csv("raw_data/Distribution_of_COVID-19_Deaths_and_Populations__by_Jurisdiction__Age__and_Race_and_Hispanic_Origin_4TOTALS.csv")
+## get column names 
+dput(names(df4))
+```
+
+**CHART 7 - Cumulative Totals, by State**
+```{r}
+# filter and select for all ages, all states, covid counts, rename race column 
+chart_7 <- df4 %>% filter(AgeGroup == "All ages, unadjusted") %>% select(c("End.Date", "State", "Race.Hispanic.origin", "Count.of.COVID.19.deaths", "AgeGroup", "Suppression")) %>% plyr::rename(c("Race.Hispanic.origin" = "Race.Ethnicity"))
+
+# rename variables 
+chart_7$Race.Ethnicity <- str_replace_all(chart_7$Race.Ethnicity, c("Non-Hispanic White" = "White", "Non-Hispanic Black" = "Black", "Non-Hispanic Asian" = "Asian", "Non-Hispanic American Indian or Alaska Native" = "Indigenous", "Non-Hispanic Native Hawaiian or Other Pacific Islander" = "Pacific Islander", "Hispanic" = "Latino"))
+
+# combine the nyc and nys values 
+chart_7_NY <- chart_7 %>% filter(State %in% c("New York","New York City"))
+chart_7_NY_new <- chart_7_NY %>% group_by(Race.Ethnicity) %>% mutate(Count.of.COVID.19.deaths_COMBO = sum(Count.of.COVID.19.deaths, na.rm = TRUE))
+chart_7_NY_new_renamed <- chart_7_NY_new %>% select(!c("Count.of.COVID.19.deaths")) %>% filter(State == "New York") %>% plyr::rename(c("Count.of.COVID.19.deaths_COMBO" = "Count.of.COVID.19.deaths"))
+
+# remove NY data from original dataset 
+chart_7_NOT_NY <- chart_7 %>% filter(State %!in% c("New York","New York City"))
+
+# merge together  non-NY dataset with new NY data
+chart_7 <- rbind(chart_7_NOT_NY, chart_7_NY_new_renamed)
+
+# reorder states - alphabetical with US first 
+chart_7_export <- chart_7[order(chart_7$State),]
+match_list = c("United States")
+chart_7_export <- chart_7_export %>% arrange(desc(State %in% match_list))
+
+# add comma for thousands separator
+chart_7_export$Count.of.COVID.19.deaths <- format(chart_7_export$Count.of.COVID.19.deaths, format = 'd', big.mark=",")
+
+chart_7_export <- chart_7_export %>% select(c("End.Date", "State", "Race.Ethnicity", "Count.of.COVID.19.deaths"))
+
+
+write.csv(chart_7_export, "chart_7.csv")
+```
+
+**Print cumulative stats for KEY FINDINGS**
+```{r}
+## load population data - from: https://wonder.cdc.gov/controller/saved/D170/D278F683
+df2 <- read_delim("raw_data/total_us_pop_by_race.txt", 
+    delim = "\t", escape_double = FALSE, 
+    trim_ws = TRUE)
+
+## filter for just population data that is needed 
+
+pop_US <- df2 %>% filter((Notes == "Total" & Ethnicity == "Hispanic or Latino") | ((is.na(Notes) | Notes!="Total") & Ethnicity != "Hispanic or Latino"))
+
+pop_US <- pop_US %>% mutate(Race.Ethnicity = coalesce(Race, Ethnicity)) %>% select(Race.Ethnicity, Population)
+
+## rename race/ethnicity 
+pop_US$Race.Ethnicity <- str_replace_all(pop_US$Race.Ethnicity, c("Black or African American" = "Black", "American Indian or Alaska Native" = "Indigenous", "Native Hawaiian or Other Pacific Islander" = "Pacific Islander", "Hispanic or Latino" = "Latino"))
+
+#add column with state = United States
+pop_US <- pop_US %>% mutate(State = c("United States"))
+
+## get just US totals for mortality data - out of chart 7 
+stats_text <- chart_7 %>% filter(State == "United States")
+
+## combine population data into mortality data 
+stats_text <- stats_text %>% left_join(pop_US)
+
+## calculate crude rates 
+stats_text <- stats_text %>% mutate(Crude_Rate = Count.of.COVID.19.deaths/Population*100000)
+
+## calculate 1 in rates 
+stats_text <- stats_text %>% mutate(One_In = Population/Count.of.COVID.19.deaths)
+
+#write text with data points
+white_stat <- paste0("1 in ", round(stats_text[stats_text$Race.Ethnicity == "White", "One_In"]), " White Americans has died (or ", round(stats_text[stats_text$Race.Ethnicity == "White", "Crude_Rate"]), " per 100,000)")
+
+hispanic_stat <- paste0("1 in ", round(stats_text[stats_text$Race.Ethnicity == "Latino", "One_In"]), " Hispanic Americans has died (or ", round(stats_text[stats_text$Race.Ethnicity == "Latino", "Crude_Rate"]), " per 100,000)")
+
+black_stat <- paste0("1 in ", round(stats_text[stats_text$Race.Ethnicity == "Black", "One_In"]), " Black Americans has died (or ", round(stats_text[stats_text$Race.Ethnicity == "Black", "Crude_Rate"]), " per 100,000)")
+
+aian_stat <- paste0("1 in ", round(stats_text[stats_text$Race.Ethnicity == "Indigenous", "One_In"]), " Indigenouss has died (or ", round(stats_text[stats_text$Race.Ethnicity == "Indigenous", "Crude_Rate"]), " per 100,000)")
+
+nhopi_stat <- paste0("1 in ", round(stats_text[stats_text$Race.Ethnicity == "Pacific Islander", "One_In"]), " Pacific Islander Americans has died (or ", round(stats_text[stats_text$Race.Ethnicity == "Pacific Islander", "Crude_Rate"]), " per 100,000)")
+
+asian_stat <- paste0("1 in ", round(stats_text[stats_text$Race.Ethnicity == "Asian", "One_In"]), " Asian Americans has died (or ", round(stats_text[stats_text$Race.Ethnicity == "Asian", "Crude_Rate"]), " per 100,000)")
+
+total_deaths <- sum(stats_text$Count.of.COVID.19.deaths)
+
+totals <- paste0("Of the ", total_deaths, " cumulative U.S. deaths catalogued in this Color of Coronavirus update, these are the known numbers of lives lost by group: 
+                 Asian (",stats_text[stats_text$Race.Ethnicity == "Asian", "Count.of.COVID.19.deaths"],"), 
+                 Black (",stats_text[stats_text$Race.Ethnicity == "Black", "Count.of.COVID.19.deaths"],"), 
+                 Indigenous (",stats_text[stats_text$Race.Ethnicity == "Indigenous", "Count.of.COVID.19.deaths"],"), 
+                 Latino (",stats_text[stats_text$Race.Ethnicity == "Latino", "Count.of.COVID.19.deaths"],"), 
+                 Pacific Islander (",stats_text[stats_text$Race.Ethnicity == "Pacific Islander", "Count.of.COVID.19.deaths"],") and 
+                 White Americans (",stats_text[stats_text$Race.Ethnicity == "White", "Count.of.COVID.19.deaths"],"). Additionally, (",stats_text[stats_text$Race.Ethnicity == "Other", "Count.of.COVID.19.deaths"],") deaths are recorded as other race.")
+
+date <- paste0("As of the week ending ", max(mdy(df4$End.Date)))
+fileConn<-file("cumulative_stats_text.txt")
+writeLines(c(date, hispanic_stat, white_stat, black_stat, aian_stat, nhopi_stat, asian_stat, totals), fileConn)
+close(fileConn)
+
+text <- c(date, hispanic_stat, white_stat, black_stat, aian_stat, nhopi_stat, asian_stat, totals)
+
+```
+
+**CHART 6 - First Cumulative Crude Rates, by State**
+```{r}
+
+
+## load population data - from: https://wonder.cdc.gov/controller/saved/D170/D279F330
+df3 <- read_delim("raw_data/states_pop_by_race.txt", 
+    delim = "\t", escape_double = FALSE, 
+    trim_ws = TRUE)
+
+## filter for just population data that is needed, rename state variable 
+
+pop_STATES <- df3 %>% filter((Notes == "Total" & Ethnicity == "Hispanic or Latino") | ((is.na(Notes) | Notes!="Total") & Ethnicity != "Hispanic or Latino")) %>% plyr::rename(c("States" = "State"))
+
+pop_STATES <- pop_STATES %>% mutate(Race.Ethnicity = coalesce(Race, Ethnicity)) %>% select(State, Race.Ethnicity, Population)
+
+#add us total populations 
+pop_STATES <- rbind(pop_STATES, pop_US)
+
+pop_STATES$Race.Ethnicity <- str_replace_all(pop_STATES$Race.Ethnicity, c("Black or African American" = "Black", "American Indian or Alaska Native" = "Indigenous", "Native Hawaiian or Other Pacific Islander" = "Pacific Islander", "More than one race" = "Multiracial", "Hispanic or Latino" = "Latino"))
+
+chart_6 <- chart_7 %>% left_join(pop_STATES)
+
+## calculate crude rates, cumulative
+chart_6_crude <- chart_6 %>% mutate(Crude_Cumulative = Count.of.COVID.19.deaths/Population*100000)
+
+
+```
+
+**AGE ADJUSTMENT- using 2020 population standard, crude rates per person per age bracket**
+```{r}
+
+## first get crude rates per age bracket 
+
+## load Non Hispanic population data - from: https://wonder.cdc.gov/controller/saved/D170/D279F896
+df6 <- read_delim('raw_data/StandardPop2020_NonHispanic.txt', 
+    delim = "\t", escape_double = FALSE, 
+    trim_ws = TRUE)
+
+## filter for just population data that is needed 
+age_groups_US <- df6 %>% filter(!is.na(`Ten-Year Age Groups`)) %>% plyr::rename(c("Race" = "Race.Ethnicity")) %>% 
+  select(c("Race.Ethnicity", "Ten-Year Age Groups", "Population"))
+
+## load Hispanic population data - from: https://wonder.cdc.gov/controller/saved/D170/D279F900 
+df7 <- read_delim('raw_data/StandardPop2020_Hispanic.txt', 
+    delim = "\t", escape_double = FALSE, 
+    trim_ws = TRUE)
+
+## filter for just population data that is needed 
+age_groups_US_Hispanic <- df7 %>% filter(!is.na(`Ten-Year Age Groups`)) 
+age_groups_US_Hispanic$Race.Ethnicity <- "Hispanic"
+age_groups_US_Hispanic <- age_groups_US_Hispanic %>% select(c("Race.Ethnicity", "Ten-Year Age Groups", "Population"))
+
+age_groups_US <- rbind(age_groups_US, age_groups_US_Hispanic)
+
+## combine 0-24 to one age group to match health data grouping
+
+age_groups_US_024 <- age_groups_US %>% filter(`Ten-Year Age Groups` %in% c("< 1 year","1-4 years","5-14 years","15-24 years"))
+age_groups_US_024 <- age_groups_US_024 %>% group_by(Race.Ethnicity) %>% mutate(`0-24 years` = sum(Population)) %>% select(Race.Ethnicity, `0-24 years`)
+age_groups_US_024 <- unique(age_groups_US_024) %>% pivot_longer(cols = `0-24 years`, names_to = "Ten-Year Age Groups", values_to = "Population")
+
+## merge back into rest of pop data 
+age_groups_US_NOT_024 <- age_groups_US %>% filter(`Ten-Year Age Groups` %!in% c("< 1 year","1-4 years","5-14 years","15-24 years"))
+
+age_groups_US <- rbind(age_groups_US_024, age_groups_US_NOT_024)
+
+## rename age groups column to match health data 
+age_groups_US <- age_groups_US %>% plyr::rename(c("Ten-Year Age Groups" = "AgeGroup"))
+
+## rename race/ethnicity groups 
+age_groups_US$Race.Ethnicity <- str_replace_all(age_groups_US$Race.Ethnicity, c("Black or African American" = "Black", "American Indian or Alaska Native" = "Indigenous", "Native Hawaiian or Other Pacific Islander" = "Pacific Islander", "Hispanic" = "Latino"))
+
+## load health data, select variables needed and rename columns/data to match pop data 
+mort_by_ages <- df4 %>% filter(State == "United States" & AgeGroup %!in% c("All ages, standardized", "All ages, unadjusted") &                                    Race.Hispanic.origin != "Other") %>% 
+                        select(c("Data.as.of", "End.Date", "State", "Race.Hispanic.origin", "Count.of.COVID.19.deaths",                                             "AgeGroup")) %>% 
+                        plyr::rename(c("Race.Hispanic.origin" = "Race.Ethnicity"))
+
+mort_by_ages$Race.Ethnicity <- str_replace_all(mort_by_ages$Race.Ethnicity, c("Non-Hispanic White" = "White", "Non-Hispanic Black" = "Black", "Non-Hispanic Asian" = "Asian", "Non-Hispanic American Indian or Alaska Native" = "Indigenous", "Non-Hispanic Native Hawaiian or Other Pacific Islander" = "Pacific Islander", "Hispanic" = "Latino"))
+
+mort_by_ages$AgeGroup <- str_replace_all(mort_by_ages$AgeGroup, c("85 years and over" = "85+ years"))
+
+## merge with pop data 
+mort_by_ages <- mort_by_ages %>% left_join(age_groups_US)
+
+mort_by_ages <- mort_by_ages %>% mutate(crude_standard = Count.of.COVID.19.deaths/Population)
+
+## combine races per age bracket to get overall rates per age bracket 
+age_adjust_all_americans <- mort_by_ages %>% 
+  group_by(AgeGroup) %>% 
+  summarise(across(.cols = c(Count.of.COVID.19.deaths, Population), sum)) %>% 
+  mutate(crude_standard = Count.of.COVID.19.deaths/Population) %>% 
+  select(AgeGroup, crude_standard)
+
+```
+
+
+**Get indirect age adjusted rates for Chart 3**
+```{r}
+## for all states, population data
+## first get crude rates per person per age bracket 
+
+## load Non Hispanic population data - from: https://wonder.cdc.gov/controller/saved/D170/D279F896
+df8 <- read_delim('raw_data/StatePops2020_NonHispanic.txt', 
+    delim = "\t", escape_double = FALSE, 
+    trim_ws = TRUE)
+
+## filter for just population data that is needed 
+age_groups_all <- df8 %>% filter(!is.na(`Ten-Year Age Groups`)) %>% 
+  plyr::rename(c("Race" = "Race.Ethnicity")) %>% 
+  select(c("States", "Race.Ethnicity", "Ten-Year Age Groups", "Population"))
+
+## load Hispanic population data - from: https://wonder.cdc.gov/controller/saved/D170/D279F900 
+df9 <- read_delim('raw_data/StatePops2020_Hispanic.txt', 
+    delim = "\t", escape_double = FALSE, 
+    trim_ws = TRUE)
+
+## filter for just population data that is needed 
+age_groups_all_Hispanic <- df9 %>% filter(!is.na(`Ten-Year Age Groups`)) 
+age_groups_all_Hispanic$Race.Ethnicity <- "Hispanic"
+age_groups_all_Hispanic <- age_groups_all_Hispanic %>% select(c("States", "Race.Ethnicity", "Ten-Year Age Groups", "Population"))
+
+age_groups_all <- rbind(age_groups_all, age_groups_all_Hispanic) 
+
+age_groups_all <- age_groups_all %>% plyr::rename(c("States" = "State"))
+
+## combine 0-24 to one age group 
+
+age_groups_all_024 <- age_groups_all %>% filter(`Ten-Year Age Groups` %in% c("< 1 year","1-4 years","5-14 years","15-24 years"))
+age_groups_all_024 <- age_groups_all_024 %>% group_by(State, Race.Ethnicity) %>% mutate(`0-24 years` = sum(Population)) %>% select(State, Race.Ethnicity, `0-24 years`)
+age_groups_all_024 <- unique(age_groups_all_024) %>% pivot_longer(cols = `0-24 years`, names_to = "Ten-Year Age Groups", values_to = "Population")
+
+## merge back into rest of pop data 
+age_groups_all_NOT_024 <- age_groups_all %>% filter(`Ten-Year Age Groups` %!in% c("< 1 year","1-4 years","5-14 years","15-24 years"))
+
+age_groups_all <- rbind(age_groups_all_024, age_groups_all_NOT_024)
+
+## rename age groups column to match health data 
+age_groups_all <- age_groups_all %>% plyr::rename(c("Ten-Year Age Groups" = "AgeGroup"))
+
+## rename race/ethnicity groups 
+age_groups_all$Race.Ethnicity <- str_replace_all(age_groups_all$Race.Ethnicity, c("Black or African American" = "Black", "American Indian or Alaska Native" = "Indigenous", "Native Hawaiian or Other Pacific Islander" = "Pacific Islander", "Hispanic" = "Latino"))
+
+#add US data to age_groups_all
+age_groups_US <- age_groups_US %>% mutate(State = "United States")
+age_groups_all_US <- rbind(age_groups_all, age_groups_US)
+
+#calculate estimated death counts for each race/age group, for all states/national 
+estimated_deaths <- age_groups_all_US %>% left_join(age_adjust_all_americans) %>% 
+  mutate(est_deaths = Population * crude_standard)
+
+#add together estimated death counts of age groups, for each race group separately, for all states/national (e.g. add together death counts by age group for all Hispanic people in Iowa to get a total estimated death count for Hispanics in Iowa)
+sum_estimated_deaths <- estimated_deaths %>% group_by(State, Race.Ethnicity) %>% 
+  summarise(sum_est_deaths = sum(est_deaths)) 
+
+#merge with data on actual deaths from chart_7 file and calculate standardized mortality ratio of actual deaths over estimated deaths
+age_adjusted_rates <- chart_7 %>% 
+  left_join(sum_estimated_deaths) %>% 
+  mutate(smr =  Count.of.COVID.19.deaths/sum_est_deaths)
+
+#get crude rate for all americans
+count_for_us <- age_adjusted_rates %>% filter(State == "United States")
+crude_rate_all <- (sum(count_for_us$Count.of.COVID.19.deaths))/(sum(age_groups_US$Population))*100000
+
+age_adjusted_rates_indirect <- age_adjusted_rates %>% mutate(age_adjusted_rate_indirect = smr*crude_rate_all)
+
+#select just relevant variables 
+chart_6_adjusted_indirect <- age_adjusted_rates_indirect %>% select(State, Race.Ethnicity, age_adjusted_rate_indirect, Count.of.COVID.19.deaths)
+```
+
+**Calculate direct age adjustments where possible**
+```{r}
+## mortality by age groups for States 
+mort_by_ages_US <- df4 %>% filter(AgeGroup %!in% c("All ages, standardized", "All ages, unadjusted") & Race.Hispanic.origin != "Other") %>% 
+  select(c("Data.as.of", "End.Date", "State", "Race.Hispanic.origin", "Count.of.COVID.19.deaths", "AgeGroup")) %>% 
+  plyr::rename(c("Race.Hispanic.origin" = "Race.Ethnicity"))
+
+mort_by_ages_US$Race.Ethnicity <- str_replace_all(mort_by_ages_US$Race.Ethnicity, c("Non-Hispanic White" = "White", "Non-Hispanic Black" = "Black", "Non-Hispanic Asian" = "Asian", "Non-Hispanic American Indian or Alaska Native" = "Indigenous", "Non-Hispanic Native Hawaiian or Other Pacific Islander" = "Pacific Islander", "Hispanic" = "Latino"))
+
+mort_by_ages_US$AgeGroup <- str_replace_all(mort_by_ages_US$AgeGroup, c("85 years and over" = "85+ years"))
+
+
+# combine the nyc and nys values 
+mort_by_ages_NY <- mort_by_ages_US %>% 
+  filter(State %in% c("New York","New York City"))
+mort_by_ages_NY_new <- mort_by_ages_NY %>% 
+  group_by(Race.Ethnicity, AgeGroup) %>% 
+  mutate(Count.of.COVID.19.deaths_COMBO = sum(Count.of.COVID.19.deaths, na.rm = FALSE))
+
+mort_by_ages_NY_new_renamed <- mort_by_ages_NY_new %>% 
+  select(!c("Count.of.COVID.19.deaths")) %>% 
+  filter(State == "New York") %>% 
+  plyr::rename(c("Count.of.COVID.19.deaths_COMBO" = "Count.of.COVID.19.deaths"))
+
+# remove NY data from original dataset 
+mort_by_ages_NOT_NY <- mort_by_ages_US %>% 
+  filter(State %!in% c("New York","New York City"))
+
+# merge together  non-NY dataset with new NY data
+mort_by_ages_US <- rbind(mort_by_ages_NOT_NY, mort_by_ages_NY_new_renamed)
+
+# see which states/groups could be directly age adjusted 
+mort_by_ages_US_NAcount <- mort_by_ages_US %>% 
+  group_by(State, Race.Ethnicity) %>% 
+  summarise(sumNA = sum(is.na(Count.of.COVID.19.deaths))) %>% 
+  filter(sumNA == 0)
+
+# use join to just select data with 0 NAs
+mort_by_ages_US_no_NAs <- mort_by_ages_US_NAcount %>% 
+  left_join(mort_by_ages_US)
+
+## merge with pop data 
+mort_by_ages_US_no_NAs <- mort_by_ages_US_no_NAs %>% 
+  left_join(age_groups_all_US)
+
+## calc crude rate per age/race/state group 
+mort_by_ages_US_no_NAs <- mort_by_ages_US_no_NAs %>% 
+  mutate(crude_rate_group = Count.of.COVID.19.deaths/Population*100000)
+
+## get population weights
+age_groups_all_americans <- age_groups_US %>% 
+  group_by(AgeGroup) %>% 
+  mutate(AgeGroupTotal = sum(Population)) %>% 
+  select(AgeGroup, AgeGroupTotal) %>% 
+  unique()
+
+pop_weights <- age_groups_all_americans %>% 
+  mutate(pop_weight = AgeGroupTotal/sum(age_groups_all_americans$AgeGroupTotal)) %>% 
+  select(AgeGroup, pop_weight)
+
+# merge pop weights into health data
+age_adjusted_direct <- mort_by_ages_US_no_NAs %>% 
+  left_join(pop_weights)
+
+# calculate weighted deaths 
+age_adjusted_direct <- age_adjusted_direct %>% 
+  mutate(weighted_deaths_by_age = crude_rate_group*pop_weight)
+ 
+age_adjusted_direct_rates <- age_adjusted_direct %>% 
+  group_by(State, Race.Ethnicity) %>% 
+  summarise(age_adjusted_rate_direct = sum(weighted_deaths_by_age))
+
+
+## combine direct and indirect rates, and where possible compare to see how accurate indirect rates are 
+#get indirect data from chart 6 crude states section 
+comparison_age_adjustments <- age_adjusted_direct_rates %>% right_join(chart_6_adjusted_indirect)
+
+comparison_age_adjustments <- comparison_age_adjustments %>% 
+  mutate(Rates_Average = (age_adjusted_rate_indirect + age_adjusted_rate_direct)/2) %>% 
+  mutate(Rate_Difference_Raw = age_adjusted_rate_indirect - age_adjusted_rate_direct) %>% 
+  mutate(Rate_Difference_Percent = Rate_Difference_Raw/Rates_Average*100)
+
+# most are within 10%
+
+#create true/false column based on if the direct age adjustment is available
+comparison_age_adjustments <- comparison_age_adjustments %>% mutate(Direct_Available = !is.na(age_adjusted_rate_direct))
+```
+
+**Put together CSVs for chart 6 and chart 3**
+```{r}
+#combine crude rate data with age adjusted data 
+chart_6_final <- chart_6_crude %>% left_join(comparison_age_adjustments) %>% filter(Race.Ethnicity != "Other") %>% select(!c("AgeGroup", "Suppression"))
+
+#remove indirect age adjusted rates for cases with less than 200 deaths
+chart_6_final$age_adjusted_rate_indirect[chart_6_final$Count.of.COVID.19.deaths <= 199 ] <- NA
+
+#create new column with choice of direct or indirect rate for graphic 
+chart_6_final <- chart_6_final %>% 
+  mutate(Age_Adjusted_Rate_GRAPHIC = ifelse(!is.na(age_adjusted_rate_direct), age_adjusted_rate_direct, age_adjusted_rate_indirect))
+
+#add commas into covid death counts and round other variables
+chart_6_final$Count.of.COVID.19.deaths <- format(chart_6_final$Count.of.COVID.19.deaths, format = 'd', big.mark=",")
+chart_6_final$Crude_Cumulative <- round(chart_6_final$Crude_Cumulative)
+chart_6_final$Age_Adjusted_Rate_GRAPHIC <- round(chart_6_final$Age_Adjusted_Rate_GRAPHIC)
+
+#rename variables for chart/publication and remove uneccessary variables
+chart_6_final <- chart_6_final %>% 
+  plyr::rename(c("Crude_Cumulative" = "Crude Rate", "Age_Adjusted_Rate_GRAPHIC" = "Age-Adjusted Rate", "Count.of.COVID.19.deaths" = "Number of COVID-19 Deaths")) %>% 
+  select(c("End.Date", "State", "Race.Ethnicity", "Number of COVID-19 Deaths", 
+"Population", "Crude Rate", "age_adjusted_rate_direct", "age_adjusted_rate_indirect", 
+"Direct_Available", "Age-Adjusted Rate"))
+
+# reorder states - alphabetical with US first 
+chart_6_final <- chart_6_final[order(chart_6_final$State),]
+match_list = c("United States")
+chart_6_final <- chart_6_final %>% arrange(desc(State %in% match_list))
+
+chart_6_export <- chart_6_final 
+
+write.csv(chart_6_export, "chart_6.csv")
+
+#just national for chart 3
+chart_3_export <- chart_6_final  %>% filter(State == "United States") %>% 
+  select(End.Date, State, Race.Ethnicity, `Crude Rate`, `Age-Adjusted Rate`, `Number of COVID-19 Deaths`)
+
+write.csv(chart_3_export, "chart_3.csv")
+
+```
+
+
+***Put together CSV for maps**
+```{r}
+rates_maps <- chart_6_final %>% filter(State != "United States") %>% select(c("State","Race.Ethnicity","Crude Rate","Age-Adjusted Rate","Number of COVID-19 Deaths"))
+
+## sort alphabetically 
+rates_maps <- rates_maps %>%  arrange(State)
+
+
+hispanic <- rates_maps %>% filter(Race.Ethnicity=='Latino')
+black <- rates_maps %>% filter(Race.Ethnicity=='Black')
+aian <- rates_maps %>% filter(Race.Ethnicity=='Indigenous')
+nhopi <- rates_maps %>% filter(Race.Ethnicity=='Pacific Islander')
+asian <- rates_maps %>% filter(Race.Ethnicity=='Asian')
+white <- rates_maps %>% filter(Race.Ethnicity=='White')
+
+write.csv(hispanic, "hispanic-state-rates_for_map.csv")
+write.csv(black, "black-state-rates_for_map.csv")
+write.csv(aian , "aian-state-rates_for_map.csv")
+write.csv(nhopi, "nhopi-state-rates_for_map.csv")
+write.csv(asian, "asian-state-rates_for_map.csv")
+write.csv(white, "white-state-rates_for_map.csv")
+
+```
+
+
+```{r}
+save.image(file='NB2.RData')
+``` 
