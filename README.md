@@ -1,5 +1,5 @@
 # Color of Coronavirus 
-Analyses of COVID-19 mortality by race and ethnicity in the US
+**Analyses of COVID-19 mortality by race and ethnicity in the US**
 
 This repo contains data, methods and code for APM Research Lab's Color of Coronavirus project. 
 
