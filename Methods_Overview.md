@@ -3,8 +3,8 @@ Color of Coronavirus Methods Overview
 
 ### by APM Research Lab
 
-Methods are listed here in the order they are calculated in Notebook_1
-and Notebook_2.
+**Methods are listed here in the order they are calculated in Notebook_1
+and Notebook_2.**
 
 ### CHART 1
 
