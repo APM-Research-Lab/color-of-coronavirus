@@ -26,7 +26,6 @@ library(readr)
 
 not_all_na <- function(x) any(!is.na(x))
 
-setwd("SET YOUR WD")
 ```
 
 **Load Data**
@@ -46,13 +45,13 @@ chart_1 <- df %>% filter(Group == "By Month" & State == "United States" & Indica
 chart_1 <- chart_1 %>% plyr::rename(c("Non.Hispanic.White" = "White", "Non.Hispanic.Black.or.African.American" = "Black", "Non.Hispanic.Asian" = "Asian", "Non.Hispanic.American.Indian.or.Alaska.Native" = "Indigenous", "Non.Hispanic.Native.Hawaiian.or.Other.Pacific.Islander" = "Pacific Islander", "Non.Hispanic.more.than.one.race" = "More than one race", "Hispanic.or.Latino" = "Latino"))
 
 # make variable for year month combined 
-chart_1 <- chart_1 %>% mutate(Year_Month = make_date(Year, Month)) %>% mutate(Year_Month = format(Year_Month, "%Y-%m"))
+chart_1 <- chart_1 %>% mutate(Month_Year = make_date(Year, Month)) %>% mutate(Month_Year = format(Month_Year, "%m/%Y"))
 
 # add variable that sums all deaths of known race
 chart_1 <- chart_1 %>% mutate(`All Americans` = White+Black+`Indigenous`+Asian+`Pacific Islander`+`More than one race`+Latino)
 
 # select just variables needed for chart 1
-chart_1_export <- chart_1 %>% select(c("Year_Month", "White", "Black", "Indigenous", "Asian", 
+chart_1_export <- chart_1 %>% select(c("Month_Year", "White", "Black", "Indigenous", "Asian", 
 "Pacific Islander", "More than one race", "Latino", "All Americans"))
 
 write.csv(chart_1_export, "chart_1.csv")
