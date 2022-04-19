@@ -11,3 +11,5 @@ Datasets as used for the graphics are in [data_from_charts](data_from_charts).
 
 Datasets as downloaded from CDC are in [raw_data](raw_data). 
 *To allow for a smaller sized dataset, the CDC file beginning with AH_Quarterly is filtered such that `(Sex == "All Sexes" & Year %in% c(2020:2022) & AgeGroup == "All Ages")` and then uploaded here as 'raw' data. 
+
+[![DOI](https://zenodo.org/badge/470160713.svg)](https://zenodo.org/badge/latestdoi/470160713)
