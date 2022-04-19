@@ -121,13 +121,13 @@ chart_4 <- chart_4 %>% mutate(YearQuarter = NA)
 ```{r}
 
 #import quarterly data 
-### downloaded here: https://data.cdc.gov/NCHS/AH-Quarterly-Excess-Deaths-by-State-Sex-Age-and-Ra/jqg8-ycmh
-df5 <- read.csv("raw_data/AH_Quarterly_Excess_Deaths_by_State__Sex__Age__and_Race_4QUARTERLY.csv")
+### downloaded here: https://data.cdc.gov/NCHS/AH-Quarterly-Excess-Deaths-by-State-Sex-Age-and-Ra/jqg8-ycmh and filtered such that (Sex == "All Sexes" & Year %in% c(2020:2022) & AgeGroup == "All Ages"), and then saved as filtered csv
+df5 <- read.csv("raw_data/AH_Quarterly_Excess_Deaths_by_State__Sex__Age__and_Race_4QUARTERLY_FILTERED.csv")
 ## get column names 
 #dput(names(chart_4_Q))
 
 # filter for variables of interest
-chart_4_Q <- df5 %>% filter(Sex == "All Sexes" & Year %in% c(2020:2022) & AgeGroup == "All Ages" & (Quarter %in% c("Cumulative from 2020, Quarter 2 through 2020, Quarter 4", "Cumulative from 2020, Quarter 2 through 2021, Quarter 4", "Cumulative from 2020, Quarter 2 through 2021, Quarter 1", "Cumulative from 2020, Quarter 2 through 2021, Quarter 3", "Cumulative from 2020, Quarter 2 through 2021, Quarter 2", "Cumulative from 2020, Quarter 2 through 2020, Quarter 3") | (Year == 2020 & Quarter %in% c("Quarter 1", "Quarter 2")))) %>% select(c("StateName", "RaceEthnicity", "Year", "Quarter", "YearQuarter", "Start.Date", "End.Date", "COVID19..weighted.", "COVID19..unweighted.")) 
+chart_4_Q <- df5 %>% filter(Quarter %in% c("Cumulative from 2020, Quarter 2 through 2020, Quarter 4", "Cumulative from 2020, Quarter 2 through 2021, Quarter 4", "Cumulative from 2020, Quarter 2 through 2021, Quarter 1", "Cumulative from 2020, Quarter 2 through 2021, Quarter 3", "Cumulative from 2020, Quarter 2 through 2021, Quarter 2", "Cumulative from 2020, Quarter 2 through 2020, Quarter 3") | (Year == 2020 & Quarter %in% c("Quarter 1", "Quarter 2"))) %>% select(c("StateName", "RaceEthnicity", "Year", "Quarter", "YearQuarter", "Start.Date", "End.Date", "COVID19..weighted.", "COVID19..unweighted.")) 
 
 # rename variables 
 chart_4_Q <- chart_4_Q  %>% plyr::rename(c('RaceEthnicity' = 'Race.Ethnicity', 'StateName' = 'State'))
